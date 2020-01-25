@@ -420,6 +420,8 @@ function repo() {
       [[ -n "$repo" ]] || die "Required argument 'repo' missing"
       # option --force => non-interactive
 
+      # this is an optional parameter, not what shellcheck thinks
+      # shellcheck disable=SC2119
       confirm
       response="$(_request DELETE "$endpoint$repo")"
       checkError "$response"
