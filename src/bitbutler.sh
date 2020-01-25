@@ -87,68 +87,36 @@ ${b}Commands$w
     ${b}deploykey$w ${c}SUBCOMMAND$w ${c}REPO$w [${c}LABEL KEY$w] [${c}KEY ID$w]
         Work with deploy keys
 
-        ${c}SUBCOMMAND$w can be one of:
-
-            ${y}add$w       Add a new deploy key to given repo
-
-                      bitbutler deploykey add <repo> <label> <key>
-
-                      bitbutler deploykey add sandbox 'Test key' "\$(<test.pub)"
-
-            ${y}delete$w    Delete a deploy key by id
-
-                      bitbutler deploykey delete <repo> <keyid>
-
-            ${y}list$w      List deploy keys
-
-                      bitbutler deploykey list <repo>
+        ${y}add$w       Add a new deploy key to given repo
+        ${y}delete$w    Delete a deploy key by id
+        ${y}list$w      List deploy keys
 
     ${b}open$w [${c}WORD$w]
         Open bitbucket in the default browser.
 
-        ${c}WORD$w can be one of:
-
-            ${y}apidoc$w      Open API reference
-            ${y}dashboard$w   Open the dashboard (default)
+        ${y}apidoc$w      Open API reference
+        ${y}dashboard$w   Open the dashboard (default)
 
     ${b}repo$w ${c}SUBCOMMAND$w
         Work with repositories
 
-        ${c}SUBCOMMAND$w can be one of:
-
-            ${y}create$w    Create a new repository
-            ${y}delete$w    Delete a repository
-            ${y}list$w      List repository
-
-                            bitbutler repo list
+        ${y}add$w       Create a new repository
+        ${y}delete$w    Delete a repository
+        ${y}list$w      List repository
 
     ${b}restriction$w ${c}SUBCOMMAND$w ${c}REPO$w
         Work with branch restrictions
 
-        ${c}SUBCOMMAND$w can be one of:
-
-            ${y}add$w       Add a new restriction
-            ${y}delete$w    Delete a branch restriction by id
-            ${y}list$w      List branch restrictions
-
-                            bitbutler restriction list my-repo
+        ${y}add$w       Add a new restriction
+        ${y}delete$w    Delete a branch restriction by id
+        ${y}list$w      List branch restrictions
 
     ${b}reviewer$w ${c}SUBCOMMAND$w ${c}REPO$w [${c}USERNAME$w]
         Work with default reviewers
 
-        ${c}SUBCOMMAND$w can be one of:
-
-            ${y}add$w       Add a new user to the default reviewers
-
-                      bitbutler reviewer add my-repo new-reviewer
-
-            ${y}delete$w    Delete a default reviewer
-
-                      bitbutler reviewer delete my-repo reviewer
-
-            ${y}list$w      List default reviewers
-
-                      bitbutler reviewer list my-repo
+        ${y}add$w       Add a new user to the default reviewers
+        ${y}delete$w    Delete a default reviewer
+        ${y}list$w      List default reviewers
 
     ${b}version$w
         Show the script version
@@ -156,26 +124,10 @@ ${b}Commands$w
     ${b}webhook$w ${c}SUBCOMMAND$w ${c}REPO$w
         Work with repository webhooks
 
-        ${c}SUBCOMMAND$w can be one of:
-
-            ${y}add$w       Add a new hook
-
-                      bitbutler webhook add my-repo \\
-                        --url "https://example.com/" \\
-                        --description "Test Webhook" \\
-                        --events "repo:push"
-
-            ${y}delete$w    Delete a hook
-
-                      bitbutler webhook delete my-repo 049250eb-479f-4183-a907-569a0b747a0f
-
-            ${y}list$w      List webhooks
-
-                      bitbutler webhook list my-repo
-
-            ${y}list-events$w      List valid webhook events
-
-                      bitbutler webhook list-events
+        ${y}add$w         Add a new hook
+        ${y}delete$w      Delete a hook
+        ${y}list$w        List webhooks
+        ${y}list-events$w List valid webhook events
 
 ${b}Options$w
 
