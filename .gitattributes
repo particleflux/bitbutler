@@ -1,0 +1,6 @@
+/.codeclimate.yml   export-ignore
+/.gitattributes     export-ignore
+/.gitignore         export-ignore
+/CHANGELOG.md       export-ignore
+/README.md          export-ignore
+/tests              export-ignore
