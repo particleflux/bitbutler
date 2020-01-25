@@ -1,0 +1,236 @@
+= bitbutler(1)
+:author: Stefan Linke
+:doctype: manpage
+:man manual: bitbutler Manual
+:man source: bitbutler 0.1.0
+:page-layout: base
+
+== Name
+
+bitbutler - a bitbucket administration utility
+
+== Synopsis
+
+*bitbutler* _COMMAND_ [_SUBCOMMAND_] [_OPTION_]...
+
+== Description
+
+The bitbutler(1) command helps with Bitbucket administration and day-to-day
+tasks.
+
+== Commands
+
+=== help
+Display a short usage information.
+
+=== authtest
+Test the supplied credentials.
+
+=== branches _REPO_
+List branches of repository _REPO_.
+
+=== config
+Initialize a skeleton config file.
+
+=== deploykey _SUBCOMMAND_ _REPO_
+Work with deploy keys.
+
+==== subcommands
+
+*add* _REPO_ _LABEL_ _KEY_::
+Add a new deploy key to given _REPO_. +
+The key will be labeled _LABEL_, and the actual public key is given in the
+_KEY_ argument.
+
+    bitbutler deploykey add my-repo 'Test key' "$(<test.pub)"
+
+*delete* _REPO_ _ID_::
+Delete a deploy key by id.
+
+    bitbutler deploykey delete my-repo b831a8ef-3058-4571-8f89-7ab3cb793307
+
+*list* _REPO_::
+List deploy keys.
+
+    bitbutler deploykey list my-repo
+
+=== open [_PAGE_]
+Open bitbucket in the default browser.
+
+_PAGE_ can be one of:
+
+* *apidoc*      Open bitbucket API reference
+* *dashboard*   Open the dashboard (default)
+
+=== repo _SUBCOMMAND_
+Work with repositories.
+
+==== subcommands
+
+*delete* _REPO_::
+Delete a repository. +
+Will ask for interactive confirmation, unless option _--force_ is used.
+
+*list*::
+Lists all repositories owned by _bitbucket_owner_
+
+=== reviewer _SUBCOMMAND_ _REPO_
+Work with default reviewers
+
+==== subcommands
+
+*add* _REPO_ _USER_::
+Add a new user to the default reviewers. The user needs to be specified by UUID.
+
+    bitbutler reviewer add my-repo b3a963c5-0397-4101-9e52-ff4e0c3e0711
+
+*delete* _REPO_ _USER_::
+Delete a default reviewer. The user needs to be specified by UUID.
+
+    bitbutler reviewer delete my-repo b3a963c5-0397-4101-9e52-ff4e0c3e0711
+
+*list* _REPO_::
+List default reviewers.
+
+    bitbutler reviewer list my-repo
+
+=== version
+Show the script version
+
+=== webhook _SUBCOMMAND_ _REPO_
+Work with repository webhooks.
+
+==== subcommands
+
+*add* _REPO_ _OPTIONS_...::
+Add a new hook. The _--events_ parameter is optional, defaulting to a full list
+of events. See _list-events_ for the possible values.
+
+    bitbutler webhook add my-repo \\
+        --url "https://example.com/" \\
+        --description "Test Webhook" \\
+        --events "repo:push"
+
+
+*delete* _REPO_ _HOOK_ID_::
+Delete a hook by it's UUID.
+
+    bitbutler webhook delete my-repo 049250eb-479f-4183-a907-569a0b747a0f
+
+*list* _REPO_::
+List all webhooks of a repository.
+
+    bitbutler webhook list my-repo
+
+*list-events*::
+List valid webhook events.
+
+    bitbutler webhook list-events
+
+==== Specific options
+
+*-U, --url*::
+URL which should be called by the webhook.
+
+*-d, --description*::
+A descriptive label for the webhook.
+
+*-e, --events*::
+A list of space-separated events. These are the events triggering the webhook.
+Try `bitbutler webhook list-events` for a list of all possible events. When not
+specified, the full list of events is used.
+
+== Options
+
+=== Connection Configuration
+
+Basic information required to talk to bitbucket. Overwrites the corresponding
+configuration file options.
+
+*-u, --user* _USERNAME_::
+Bitbucket username.
+
+*-p, --pass* _PASSWORD_::
+Bitbucket password.
+
+*-o, --owner* _OWNER_::
+Bitbucket repository owner. This is the prefix to all your repositories.
+
+=== Processing Information
+
+*-v, --verbose*::
+Verbose output. May include debugging information.
+
+*-q, --quiet*::
+Silence log messages.
+
+=== Program Information
+
+*-h, --help*::
+Print a short help message.
+
+*-V, --version*::
+Print program version number.
+
+
+== Configuration file
+
+bitbutler expects a configuration file at `$HOME/.bitbucket.conf`. The file
+is sourced by bash, so the format is expected to be plain bash variable
+assignments. Option values containing spaces need to be quoted. A skeleton
+config file can be generated with the _bitbutler config_ command.
+
+=== Supported options
+
+*bitbucket_user*::
+Bitbucket username.
+
+*bitbucket_pass*::
+Bitbucket password.
+
+*bitbucket_owner*::
+Bitbucket repository owner. This is the prefix to all your repositories.
+
+== Environment
+
+*BB_CONFIG_FILE*::
+    If the _BB_CONFIG_FILE_ environment variable is set, it will override
+    the default config file location at `$HOME/.bitbucket.conf`
+
+== EXIT STATUS
+
+*0*::
+Success.
+
+*1*::
+Failure (usage error; configuration error; document processing failure;
+unexpected error).
+
+== EXAMPLES
+
+Add a deploy key to repository sandbox
+
+    bitbutler deploykey add my-repo 'Test key' "$(<test.pub)"
+
+Add a webhook listening on repository push for codeclimate connection
+
+    bitbutler webhook add my-repo \
+        --url "https://codeclimate.com/api/repos/<repo-id>/refresh?api_token=<api-token>" \
+        --description 'Codeclimate' \
+        --events "repo:push"
+
+== BUGS
+
+Refer to the *bitbutler* issue tracker at https://github.com/particleflux/bitbutler/issues
+
+== AUTHOR
+Stefan Linke (doc (at) particleflux.codes)
+
+== RESOURCES
+
+*Git source repository on GitHub:* https://github.com/particleflux/bitbutler
+
+== COPYING
+
+Copyright \(C) 2020 Stefan Linke.
+Free use of this software is granted under the terms of the MIT License.
