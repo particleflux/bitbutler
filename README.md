@@ -1,5 +1,7 @@
 # bitbutler
 
+[![Test Coverage](https://api.codeclimate.com/v1/badges/ab50914097740e4e3fad/test_coverage)](https://codeclimate.com/github/particleflux/bitbutler/test_coverage)
+
 A bitbucket administration utility.
 
 ## Runtime requirements
