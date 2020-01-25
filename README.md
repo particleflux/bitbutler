@@ -31,6 +31,12 @@ bash, for example in your `.bashrc`:
 **NOTE:** The bash completion script needs the *bitbutler* binary within your
 `PATH`.
 
+## Usage
+
+There is a short overview of available commands built-in and accessible via
+`bitbutler help`. For a more extensive documentation, consult the included
+manpage.
+
 ## Development
 
 ### Requirements
