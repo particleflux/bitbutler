@@ -238,7 +238,7 @@ function parseArgs() {
       -h | --help)
         usage
         ;;
-      --version)
+      -V | --version)
         version
         ;;
       -d | --description)
