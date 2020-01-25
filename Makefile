@@ -24,9 +24,15 @@ test:
 coverage:
 	kcov --include-path=. coverage bats tests/
 
+shellcheck:
+	find 'src/' -type f -name '*.sh' | xargs shellcheck --external-sources
+
+stylecheck:
+	shfmt -i 2 -ci -d src
+
 clean:
 	$(RM) -r ./coverage
 	$(MAKE) -C man clean
 
 
-.PHONY: install test coverage clean doc
+.PHONY: install test coverage clean doc shellcheck stylecheck

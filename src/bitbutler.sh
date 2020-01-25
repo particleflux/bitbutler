@@ -49,7 +49,7 @@ fi
   echo "Cannot open utils.sh"
   exit 1
 }
-# shellcheck source=utils.sh
+# shellcheck source=src/utils.sh
 . "$BB_VENDOR_PATH/utils.sh"
 
 function version() {
@@ -420,6 +420,8 @@ function repo() {
       [[ -n "$repo" ]] || die "Required argument 'repo' missing"
       # option --force => non-interactive
 
+      # this is an optional parameter, not what shellcheck thinks
+      # shellcheck disable=SC2119
       confirm
       response="$(_request DELETE "$endpoint$repo")"
       checkError "$response"

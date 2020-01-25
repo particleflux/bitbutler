@@ -34,6 +34,10 @@ function beginsWith() {
   esac
 }
 
+# Ask for user confirmation
+#
+# Suppressing shellcheck warning as this is an _optional_ parameter
+# shellcheck disable=SC2120
 function confirm() {
   local msg
 
