@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+#
+#  Bash completion for bitbutler
+
+_bitbutler_completion()
+{
+    local commands options pages cmd
+
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    commands=$(bitbutler help | awk '/Commands/,/Options/' | awk '/^\s{4}\x1b\S+\s*/ {print $1}' | sed 's/\x1b\[[0-9;]*m//g')
+    pages="apidoc dashboard"
+
+    # not local for caching
+    bbc_repos=
+
+    if [[ ${cur} == -* ]] ; then
+        options="$(bitbutler help | grep -zoE 'Options.*' | grep -aP '^\s{4}\x1b' | awk 'BEGIN {FS = "[ \x1b]+" } {print $3}')"
+        COMPREPLY=( $(compgen -W "${options}" -- ${cur}) )
+        return 0
+    else
+
+        if [[ ${COMP_CWORD} == 1 ]]; then
+            COMPREPLY=( $(compgen -W "${commands}" -- ${cur}) )
+            return 0
+        elif [[ ${COMP_CWORD} == 2 ]]; then
+            case "$prev" in
+                open)
+                    COMPREPLY=( $(compgen -W "${pages}" -- ${cur}) )
+                    ;;
+                branch)
+                    if [[ -z "$bbc_repos" ]]; then
+                        bbc_repos="$(bitbutler repo list)"
+                    fi
+                    COMPREPLY=( $(compgen -W "$bbc_repos" -- ${cur}) )
+                    ;;
+                deploykey|restriction|reviewer|repo|webhook)
+                    COMPREPLY=( $(compgen -W "add delete list" -- ${cur}) )
+                    ;;
+            esac
+        elif [[ ${COMP_CWORD} == 3 ]]; then
+            cmd="${COMP_WORDS[COMP_CWORD-2]}"
+            if [[ -z "$bbc_repos" ]]; then
+                bbc_repos="$(bitbutler repo list)"
+            fi
+            case "$cmd" in
+                deploykey|restriction|reviewer|webhook)
+                    COMPREPLY=( $(compgen -W "$bbc_repos" -- ${cur}) )
+                    ;;
+            esac
+        fi
+
+    fi
+
+    return 0
+}
+
+
+complete -F _bitbutler_completion bitbutler 2>/dev/null
