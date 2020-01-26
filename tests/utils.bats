@@ -1,8 +1,8 @@
 #!/usr/bin/env bats
 
-@test "utils log function" {
-    source "$BATS_TEST_DIRNAME/../src/utils.sh"
+source "$BATS_TEST_DIRNAME/../src/utils.sh"
 
+@test "utils log function" {
     result=$(l "Hello World")
     [ "$result" = "Hello World" ]
 
@@ -11,8 +11,6 @@
 }
 
 @test "utils v function" {
-    source "$BATS_TEST_DIRNAME/../src/utils.sh"
-
     run v "Hello World"
 
     [[ "$status" -eq 1 ]]
@@ -26,8 +24,6 @@
 }
 
 @test "utils error log function" {
-   source "$BATS_TEST_DIRNAME/../src/utils.sh"
-
     # no output to stdout
     result=$(e "total error")
     [ "$result" = "" ]
@@ -38,16 +34,12 @@
 }
 
 @test "utils die function" {
-   source "$BATS_TEST_DIRNAME/../src/utils.sh"
-
     run die "total error"
     [ "$output" = "$(echo -e '\e[31mtotal error\e[0m')" ]
     [ "$status" -eq 1 ]
 }
 
 @test "beginsWith" {
-    source "$BATS_TEST_DIRNAME/../src/utils.sh"
-
     beginsWith "hello world" "hello"
     ! beginsWith "hello world" "world"
     ! beginsWith "asdf hello world" "hello"
