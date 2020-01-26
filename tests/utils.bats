@@ -44,3 +44,20 @@ source "$BATS_TEST_DIRNAME/../src/utils.sh"
     ! beginsWith "hello world" "world"
     ! beginsWith "asdf hello world" "hello"
 }
+
+@test "confirm" {
+    # somehow, the "read" message does not show up in the $output
+    # let's just test the abortion behavior then
+
+    run bash -c ". '$BATS_TEST_DIRNAME/../src/utils.sh' && yes | confirm && echo dangerous"
+
+    [[ "$status" -eq 0 ]]
+    [[ "$output" =~ "dangerous" ]]
+
+
+    run bash -c ". '$BATS_TEST_DIRNAME/../src/utils.sh' && (yes n | confirm && echo dangerous)"
+
+    [[ "$status" -eq 1 ]]
+    [[ "$output" =~ "User aborted" ]]
+    [[ ! "$output" =~ "dangerous" ]]
+}
