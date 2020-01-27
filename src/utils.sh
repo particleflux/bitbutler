@@ -46,6 +46,6 @@ function confirm() {
   read -r -p "$msg [y/N] " response
   if [[ ! "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
     l 'User aborted'
-    exit 0
+    exit 1
   fi
 }
