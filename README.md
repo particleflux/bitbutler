@@ -31,8 +31,8 @@ bash, for example in your `.bashrc`:
 . path/to/bitbutler.completion
 ```
 
-**NOTE:** The bash completion script needs the *bitbutler* binary within your
-`PATH`.
+**NOTE:** The bash completion script needs the *bitbutler* executable within
+the `PATH`.
 
 ## Usage
 
