@@ -5,6 +5,8 @@ setup() {
   shellmock_clean
 
   export BB_VENDOR_PATH="$BATS_TEST_DIRNAME/../src"
+  export BB_CONFIG_FILE="$BATS_TEST_DIRNAME/_data/dummy.conf"
+
   source "$BATS_TEST_DIRNAME/../src/bitbutler.sh"
 }
 
@@ -52,4 +54,49 @@ teardown() {
   [[ "$status" = "1" ]]
   [[ "$output" =~ "Bad request" ]]
   [[ "$output" =~ "You must specify a valid source branch when creating a pull request" ]]
+}
+
+@test "_request - basic parameters" {
+  shellmock_expect curl --type partial --match '-X GET' --status 0
+  run _request GET /foo
+
+  [[ "$status" = "0" ]]
+
+  shellmock_verify
+  [[ "${capture[0]}" =~ "curl-stub -s -X GET -H Accept: application/json -H Content-Type: application/json -u dummy:super-secret-password" ]]
+
+}
+
+@test "_request - GET" {
+  shellmock_expect curl --type partial --match '-X GET' --status 0 --output 'hello'
+  run _request GET /foo
+
+  [[ "$status" = "0" ]]
+  [[ "$output" = "hello" ]]
+
+  shellmock_verify
+  [[ "${capture[0]}" =~ "curl-stub -s -X GET" ]]
+}
+
+@test "_request - POST (no body)" {
+  shellmock_expect curl --type partial --match '-X POST' --status 0 --output 'bar'
+  run _request POST /bar
+
+  [[ "$status" = "0" ]]
+  [[ "$output" = "bar" ]]
+
+  shellmock_verify
+  [[ "${capture[0]}" =~ "curl-stub -s -X POST" ]]
+}
+
+@test "_request - POST" {
+  shellmock_expect curl --type partial --match '-X POST' --status 0 --output 'abc'
+  run _request POST /abc "post-content"
+
+  [[ "$status" = "0" ]]
+  [[ "$output" = "abc" ]]
+
+  shellmock_verify
+  [[ "${capture[0]}" =~ "curl-stub -s -X POST" ]]
+  [[ "${capture[0]}" =~ "-d post-content" ]]
 }

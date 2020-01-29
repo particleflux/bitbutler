@@ -228,8 +228,8 @@ function parseArgs() {
 function _request() {
   local url method body
 
-  method=${1:-GET}
-  url=$2
+  method="$1"
+  url="$2"
   body="${3:-""}"
 
   curl -s -X "$method" \
