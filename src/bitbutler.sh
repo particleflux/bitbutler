@@ -155,7 +155,7 @@ function requirements() {
 
   (jq --version &>/dev/null) || die 'jq not found'
 
-  if [[ "$cmd" != "help" && "$cmd" != "config" ]]; then
+  if [[ ! "$cmd" =~ config|help|version ]]; then
     [[ -n "$bitbucket_owner" ]] || die 'owner not set'
     [[ -n "$bitbucket_user" ]] || die 'user not set'
     [[ -n "$bitbucket_pass" ]] || die 'password not set'
