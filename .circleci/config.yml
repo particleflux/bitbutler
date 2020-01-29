@@ -57,8 +57,12 @@ jobs:
       - run:
           command: |
             export PATH="$HOME/bin:$PATH"
+
+            # a normal test run before the coverage one; it has better output
+            bats tests/
+
             /tmp/cc-test-reporter before-build
-            kcov --include-path=. --exclude-path=tests coverage bats tests/
+            kcov --include-path=. --exclude-path=tests coverage bats tests/ &> /dev/null
             xml="$(ls -1 coverage/bats*/cobertura.xml | head -1)"
 
             # removing trailing slash in cobertura <source>
