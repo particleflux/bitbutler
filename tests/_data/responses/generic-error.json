@@ -1,0 +1,16 @@
+{
+  "type": "error",
+  "error": {
+    "message": "Bad request",
+    "fields": {
+      "src": [
+        "This field is required."
+      ]
+    },
+    "detail": "You must specify a valid source branch when creating a pull request.",
+    "id": "d23a1cc5178f7637f3d9bf2d13824258",
+    "data": {
+      "extra": "Optional, endpoint-specific data to further augment the error."
+    }
+  }
+}

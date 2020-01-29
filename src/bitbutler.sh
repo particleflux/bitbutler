@@ -506,6 +506,9 @@ function checkError() {
 
   if [[ -n "$type" ]] && [[ "$type" == "error" ]]; then
     message="$(echo -E "$response" | jq -r '.error | @text "\(.message // "")\n\(.detail // "")\n"')"
+    if [[ -z "$message" ]]; then
+      die "Unknown api error"
+    fi
     die "$message"
   fi
 }
@@ -540,4 +543,6 @@ function main() {
   exit 0
 }
 
-main "$@"
+if [[ "$0" != *bats* ]]; then
+    main "$@"
+fi

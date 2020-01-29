@@ -44,7 +44,7 @@ manpage.
 
 ### Requirements
 
-* [bats] for running tests
+* [bats] and [shellmock] for running tests
 * [kcov] for generating code coverage
 * [asciidoc] for generating the man page
 
@@ -64,3 +64,4 @@ make coverage
 [bats]: https://github.com/bats-core/bats-core
 [kcov]: https://github.com/SimonKagstrom/kcov
 [asciidoc]: http://asciidoc.org/
+[shellmock]: https://github.com/capitalone/bash_shell_mock
