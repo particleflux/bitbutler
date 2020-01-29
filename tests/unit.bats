@@ -160,3 +160,39 @@ teardown() {
   [[ "$status" = "0" ]]
   [[ "$output" =~ "authentication failed" ]]
 }
+
+@test "branches - missing arguments" {
+  run branches
+
+  [[ "$status" = "1" ]]
+  [[ "$output" =~ "Required argument" ]]
+}
+
+@test "branches - success" {
+  shellmock_expect curl \
+    --type partial \
+    --match 'dummy-repo/refs' \
+    --status 0 \
+    --output "$(< $BATS_TEST_DIRNAME/_data/responses/branches.json)"
+
+  run branches dummy-repo
+
+  [[ "$status" = "0" ]]
+  [[ "${lines[0]}" = "ISSUE-123" ]]
+  [[ "${lines[1]}" = "develop" ]]
+  [[ "${lines[2]}" = "master" ]]
+  [[ "${lines[3]}" = "test" ]]
+}
+
+@test "branches - failure" {
+  shellmock_expect curl \
+    --type partial \
+    --match 'foo/refs' \
+    --status 0 \
+    --output "$(< $BATS_TEST_DIRNAME/_data/responses/error-repo-not-found.json)"
+
+  run branches foo
+
+  [[ "$status" = "1" ]]
+  [[ "${lines[0]}" =~ "Repository dummy/foo not found" ]]
+}

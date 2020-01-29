@@ -1,0 +1,20 @@
+{
+  "values": [
+    {
+      "type": "branch",
+      "name": "ISSUE-123"
+    },
+    {
+      "type": "branch",
+      "name": "develop"
+    },
+    {
+      "type": "branch",
+      "name": "master"
+    },
+    {
+      "type": "branch",
+      "name": "test"
+    }
+  ]
+}

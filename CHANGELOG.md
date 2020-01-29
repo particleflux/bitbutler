@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Fixed
 - Fix error output on incomplete response
+- Add error checking on `branches` command
 
 ## 0.1.0 - 2020-01-25
 ### Added

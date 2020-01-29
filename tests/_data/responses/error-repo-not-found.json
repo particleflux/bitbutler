@@ -1,0 +1,6 @@
+{
+  "type": "error",
+  "error": {
+    "message": "Repository dummy/foo not found"
+  }
+}

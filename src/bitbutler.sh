@@ -305,8 +305,9 @@ function branches() {
     die "Required argument REPO missing"
   fi
 
-  _request GET "/repositories/${bitbucket_owner}/$repo/refs?pagelen=100&fields=values.type,values.name" |
-    jq -r '.values[] | select(.type = "branch") | .name'
+  response=$(_request GET "/repositories/${bitbucket_owner}/$repo/refs?pagelen=100&fields=values.type,values.name")
+  checkError "$response"
+  echo -n "$response" | jq -r '.values[] | select(.type = "branch") | .name'
 }
 
 function restriction() {
