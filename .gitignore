@@ -1,1 +1,3 @@
 coverage/
+shellmock.out
+shellmock.err
