@@ -134,3 +134,29 @@ teardown() {
   [[ "$status" = "1" ]]
   [[ "$output" =~ "Unknown page given" ]]
 }
+
+@test "authtest - success" {
+  shellmock_expect curl \
+    --type partial \
+    --match '/user' \
+    --status 0 \
+    --output "$(< $BATS_TEST_DIRNAME/_data/responses/user.json)"
+
+  run authtest
+
+  [[ "$status" = "0" ]]
+  [[ "$output" =~ "logged in as \"dummy\"" ]]
+}
+
+@test "authtest - failure" {
+  shellmock_expect curl \
+    --type partial \
+    --match '/user' \
+    --status 0 \
+    --output ""
+
+  run authtest
+
+  [[ "$status" = "0" ]]
+  [[ "$output" =~ "authentication failed" ]]
+}
