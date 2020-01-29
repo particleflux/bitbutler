@@ -36,12 +36,18 @@ jobs:
             - v3-dependencies
 
       - run:
+          name: Install test dependencies
           command: |
             if [[ ! -f "/tmp/cc-test-reporter" ]]; then
               curl -sSL -o /tmp/cc-test-reporter \
                 https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
             fi
             chmod +x /tmp/cc-test-reporter
+
+            shellmock_version=1.0
+            curl -sSL "https://github.com/capitalone/bash_shell_mock/archive/$shellmock_version.tar.gz" | tar xvz -C /tmp
+            cd "/tmp/bash_shell_mock-$shellmock_version/"
+            ./install.sh $HOME
 
       - save_cache:
           paths:
