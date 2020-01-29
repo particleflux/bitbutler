@@ -100,3 +100,37 @@ teardown() {
   [[ "${capture[0]}" =~ "curl-stub -s -X POST" ]]
   [[ "${capture[0]}" =~ "-d post-content" ]]
 }
+
+@test "open - fallback page" {
+  shellmock_expect xdg-open --type partial --match '/dashboard/' --status 0
+  run open
+
+  [[ "$status" = "0" ]]
+  shellmock_verify
+  [[ "${capture[0]}" =~ "xdg-open-stub" ]]
+}
+
+@test "open - dashboard" {
+  shellmock_expect xdg-open --type partial --match '/dashboard/' --status 0
+  run open dashboard
+
+  [[ "$status" = "0" ]]
+  shellmock_verify
+  [[ "${capture[0]}" = "xdg-open-stub"* ]]
+}
+
+@test "open - apidoc" {
+  shellmock_expect xdg-open --type partial --match 'https://developer.atlassian.com' --status 0
+  run open apidoc
+
+  [[ "$status" = "0" ]]
+  shellmock_verify
+  [[ "${capture[0]}" = "xdg-open-stub https://developer.atlassian.com"* ]]
+}
+
+@test "open - unknown page" {
+  run open unknown-stuff
+
+  [[ "$status" = "1" ]]
+  [[ "$output" =~ "Unknown page given" ]]
+}
