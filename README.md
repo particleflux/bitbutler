@@ -2,6 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/particleflux/bitbutler.svg?style=shield&circle-token=74c58ba45e830a2ad198901aeabdd26224296412)](https://circleci.com/gh/particleflux/bitbutler)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/ab50914097740e4e3fad/test_coverage)](https://codeclimate.com/github/particleflux/bitbutler/test_coverage)
+[![made-with-bash](https://img.shields.io/badge/Made%20with-Bash-1f425f.svg)](https://www.gnu.org/software/bash/)
 
 A bitbucket administration utility.
 
