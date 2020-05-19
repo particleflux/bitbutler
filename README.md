@@ -41,6 +41,37 @@ There is a short overview of available commands built-in and accessible via
 `bitbutler help`. For a more extensive documentation, consult the included
 manpage.
 
+## Configuration
+
+Run `bitbutler config` to write a default configuration. You should [create a
+restricted app password](https://bitbucket.org/account/settings/app-passwords/new)
+instead of using your actual password which has full access to your account.
+Depending on what you want to with bitbutler, different scopes are required, see
+table below.
+
+| Bitbutler command | required scope | Name the bitbucket GUI |
+|:---|:---|:---|
+| authtest | account | Account / Read (implies Email) |
+| branches | repository | Repositories / Read |
+| deploykey add | repository | Repositories / Read |
+| | repository:admin | Repositories / Admin |
+| deploykey delete | repository | Repositories / Read |
+| | repository:admin | Repositories / Admin |
+| deploykey list | repository | Repositories / Read |
+| | repository:admin | Repositories / Admin |
+| repo add | repository:admin | Repositories / Admin |
+| repo delete | repository:delete | Repositories / Delete |
+| repo list | repository | Repositories / Read |
+| restriction add | repository:admin | Repositories / Admin |
+| restriction delete | repository:admin | Repositories / Admin |
+| restriction list | repository:admin | Repositories / Admin |
+| reviewer add | repository:admin | Repositories / Admin |
+| reviewer delete | repository:admin | Repositories / Admin |
+| reviewer list | pullrequest | Pull requests / Read
+| webhook add | webhook | Webhooks / Read and write |
+| webhook delete | webhook | Webhooks / Read and write |
+| webhook list | webhook | Webhooks / Read and write |
+
 ## Development
 
 ### Requirements
