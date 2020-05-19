@@ -43,7 +43,7 @@ manpage.
 ## Configuration
 
 Run `bitbutler config` to write a default configuration. You should [create a
-restricted app passwort](https://bitbucket.org/account/settings/app-passwords/new)
+restricted app password](https://bitbucket.org/account/settings/app-passwords/new)
 instead of using your actual password which has full access to your account.
 Depending on what you want to with bitbutler, different scopes are required, see
 table below.
