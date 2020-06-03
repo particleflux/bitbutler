@@ -3,6 +3,7 @@
 # These are to be overridden from the script using this
 verbose=
 quiet=
+debug=
 
 # default log output
 # deactivated when quiet=1
@@ -13,6 +14,12 @@ function l() {
 # log if verbose=1
 function v() {
   [[ -n "$verbose" ]] && l "$*"
+}
+
+# log to STDERR with color for debug output
+# STDERR does not break normal execution when used in a function
+function dbg() {
+  [[ -n "$debug" ]] && (echo >&2 -e "\e[36m$*\e[0m")
 }
 
 # log errors
