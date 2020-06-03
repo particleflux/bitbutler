@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Fix error output on incomplete response
 - Add error checking on `branches` command
+- Add support for paginated requests - fixed repo list with > 100 repos
 
 ## 0.1.0 - 2020-01-25
 ### Added
