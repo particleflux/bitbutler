@@ -143,6 +143,9 @@ ${b}Options$w
     $b-v, --verbose$w
         Verbose output
 
+    $b-D, --debug$w
+        Output internal debugging information
+
     $b-q, --quiet$w
         Less output
 EOF
@@ -182,6 +185,10 @@ function parseArgs() {
       -v | --verbose)
         # shellcheck disable=SC2034
         verbose=1
+        ;;
+      -D | --debug)
+        # shellcheck disable=SC2034
+        debug=1
         ;;
       -q | --quiet)
         # shellcheck disable=SC2034
@@ -237,6 +244,30 @@ function _request() {
     -H "Content-Type: application/json" \
     -u "$bitbucket_user:$bitbucket_pass" \
     "$BASE_URL$url" -d "$body"
+}
+
+# Fetch all pages for a GET request, combining the results
+# NOTE: When narrowing returned data with `fields` it needs to include `next`
+# params: The URL to GET
+# returns: an array of combined responses `values` arrays
+function fetchAllPages() {
+  local url combined current
+
+  url="$1"
+
+  current="$(_request GET "$@")"
+  combined="$(jq '.values' <<< "$current")"
+
+  while next="$(jq -re '.next' <<< "$current")" ; do
+    nextUrl="${next#$BASE_URL}"
+    dbg "nextUrl '$nextUrl'"
+    current="$(_request GET "$nextUrl")"
+    dbg "Response: $current"
+    currentValues="$(jq '.values' <<< "$current")"
+    combined="$(echo -e "$combined\n$currentValues" | jq '.[]' | jq -s)"
+  done
+
+  echo "$combined"
 }
 
 function open() {
@@ -428,8 +459,8 @@ function repo() {
       checkError "$response"
       ;;
     list)
-      _request GET "$endpoint?pagelen=100&fields=values.full_name&sort=full_name" |
-        jq -r ".values[].full_name | sub(\"$bitbucket_owner/\"; \"\")"
+      fetchAllPages "$endpoint?pagelen=100&fields=next,values.full_name&sort=full_name" |
+        jq -r ".[].full_name | sub(\"$bitbucket_owner/\"; \"\")"
       ;;
     *)
       die "Unknown subcommand given: '$subCmd'"
