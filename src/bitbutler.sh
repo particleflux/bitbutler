@@ -233,17 +233,22 @@ function parseArgs() {
 }
 
 function _request() {
-  local url method body
+  local url method body response
 
   method="$1"
   url="$2"
   body="${3:-""}"
 
-  curl -s -X "$method" \
+  dbg "Request: $method\n $2\n $body"
+
+  response="$(curl -s -X "$method" \
     -H "Accept: application/json" \
     -H "Content-Type: application/json" \
     -u "$bitbucket_user:$bitbucket_pass" \
-    "$BASE_URL$url" -d "$body"
+    "$BASE_URL$url" -d "$body")"
+
+  dbg "Response: $response"
+  echo "$response"
 }
 
 # Fetch all pages for a GET request, combining the results
