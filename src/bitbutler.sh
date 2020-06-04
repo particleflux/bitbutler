@@ -637,7 +637,7 @@ function main() {
 
   v "Executing command '$cmd'"
   case "$cmd" in
-    authtest | config | list | open | branches)
+    authtest | config | open | branches)
       $cmd "$remainingArgs"
       ;;
     restriction | reviewer | deploykey | repo | webhook | team)
