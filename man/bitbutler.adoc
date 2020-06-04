@@ -94,6 +94,14 @@ List default reviewers.
 
     bitbutler reviewer list my-repo
 
+=== team _SUBCOMMAND_ _TEAM_
+Work with teams.
+
+==== subcommands
+
+*members*::
+Lists all members in team _TEAM_
+
 === version
 Show the script version
 
@@ -163,6 +171,9 @@ Verbose output. May include debugging information.
 
 *-q, --quiet*::
 Silence log messages.
+
+*-D, --debug*::
+Output internal debugging information to STDERR.
 
 === Program Information
 

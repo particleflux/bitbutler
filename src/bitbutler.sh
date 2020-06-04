@@ -24,6 +24,7 @@ readonly hookEvents=(
   "issue:created"
   "issue:updated"
 )
+readonly cacheDir="${XDG_CACHE_HOME:-"$HOME/.cache"}/bitbutler"
 
 configfile="$HOME/.bitbucket.conf"
 if [[ -n "$BB_CONFIG_FILE" ]]; then
@@ -117,6 +118,11 @@ ${b}Commands$w
         ${y}add$w       Add a new user to the default reviewers
         ${y}delete$w    Delete a default reviewer
         ${y}list$w      List default reviewers
+
+    ${b}team$w ${c}SUBCOMMAND$w ${c}team$w
+        Work with teams
+
+        ${y}members$w   List team members
 
     ${b}version$w
         Show the script version
@@ -256,7 +262,7 @@ function _request() {
 # params: The URL to GET
 # returns: an array of combined responses `values` arrays
 function fetchAllPages() {
-  local url combined current
+  local url combined current next nextUrl currentValues
 
   url="$1"
 
@@ -274,6 +280,71 @@ function fetchAllPages() {
 
   echo "$combined"
 }
+
+# Check for an error in the bitbucket response
+# When an error is found, print it formatted and exit the script
+function checkError() {
+  local response message
+
+  response="$1"
+  if ! type="$(echo -E "$response" | jq -jr '.type // ""' 2>/dev/null)"; then
+    die "$response"
+  fi
+
+  if [[ -n "$type" ]] && [[ "$type" == "error" ]]; then
+    message="$(echo -E "$response" | jq -r '.error | @text "\(.message // "")\n\(.detail // "")\n"')"
+    if [[ -z "$message" ]]; then
+      die "Unknown api error"
+    fi
+    die "$message"
+  fi
+}
+
+# Get user info required to work with them
+# Parameters:
+#   search    The value to search for - can be nickname, accountId etc, depending on type
+#   type      The type of search to do valid values: nickname|uuid|account_id
+# Return: JSON blob with nick, uuid and account_id
+function lookupUser() {
+  local search type userInfo
+  local -r endpoint="/teams/${bitbucket_owner}/members"
+  local -r cacheFile="$cacheDir/users.json"
+
+  search="$1"
+  type="${2:-"nickname"}"
+
+  if ! jq -re ".[] | select(.$type | contains(\"$search\"))" "$cacheFile" > /dev/null; then
+    dbg "lookupUser: user not in cache, refreshing"
+    fetchAllPages "$endpoint" > "$cacheFile"
+  fi
+
+  userInfo="$(jq "map(select(.$type | contains(\"$search\")))" "$cacheFile")"
+
+  dbg "lookupUser: userInfo: '$userInfo'"
+  echo "$userInfo"
+}
+
+function checkExactlyOneMatch() {
+  if [[ "$1" -gt "1" ]]; then
+    die "Matched more than 1 user"
+  elif [[ "$1" -eq "0" ]]; then
+    die "Found no matching user"
+  fi
+}
+
+function getUserAttributeFromName() {
+  local userBlob numUsers
+
+  userBlob="$(lookupUser "$1" nickname)"
+  numUsers="$(jq 'length' <<< "$userBlob")"
+  checkExactlyOneMatch "$numUsers"
+
+  jq -r ".[0].$2" <<< "$userBlob"
+}
+
+#
+# Commands
+#
 
 function open() {
   local what
@@ -367,7 +438,7 @@ function restriction() {
 }
 
 function reviewer() {
-  local repo subCmd username response
+  local repo subCmd username response accountId
 
   subCmd="$1"
   repo="$2"
@@ -380,20 +451,23 @@ function reviewer() {
   case "$subCmd" in
     list)
       _request GET "$endpoint" |
-        jq -r '.values[] | [.uuid, .nickname] | @tsv'
+        jq -r '.values[] | [.nickname] | @tsv'
       ;;
     add)
       [[ -n "$username" ]] || die "Required argument 'username' missing"
-      # username/uuid needs to be urlencoded?
-      username="$(echo -n "$username" | jq -sRr @uri)"
 
-      response="$(_request PUT "$endpoint/$username")"
+      accountId="$(getUserAttributeFromName "$username" account_id)"
+
+      # the body of this request is undocumented by atlassian
+      # doing it as mentioned in the docs results in a `400 Bad Request`
+      response="$(_request PUT "$endpoint/$accountId" "{\"mention_id\":\"$accountId\"}")"
       checkError "$response"
       ;;
     delete)
       [[ -n "$username" ]] || die "Required argument 'username' missing"
 
-      response="$(_request DELETE "$endpoint/$username")"
+      accountId="$(getUserAttributeFromName "$username" account_id)"
+      response="$(_request DELETE "$endpoint/$accountId")"
       checkError "$response"
       ;;
     *)
@@ -531,23 +605,25 @@ JSON
   esac
 }
 
-# Check for an error in the bitbucket response
-# When an error is found, print it formatted and exit the script
-function checkError() {
-  local response message
+function team() {
+  local team subCmd response
 
-  response="$1"
-  if ! type="$(echo -E "$response" | jq -jr '.type // ""' 2>/dev/null)"; then
-    die "$response"
-  fi
+  subCmd="$1"
+  team="$2"
+  [[ -n "$subCmd" ]] || die "Required argument 'sub command' missing"
+  [[ -n "$team" ]] || die "Required argument 'team' missing"
 
-  if [[ -n "$type" ]] && [[ "$type" == "error" ]]; then
-    message="$(echo -E "$response" | jq -r '.error | @text "\(.message // "")\n\(.detail // "")\n"')"
-    if [[ -z "$message" ]]; then
-      die "Unknown api error"
-    fi
-    die "$message"
-  fi
+  local -r endpoint="/teams/${bitbucket_owner}"
+
+  case "$subCmd" in
+    members)
+      _request GET "$endpoint/members" |
+        jq -r '.values[] | [.nickname] | @tsv'
+      ;;
+    *)
+      die "Unknown subcommand given: '$subCmd'"
+      ;;
+  esac
 }
 
 function main() {
@@ -557,12 +633,14 @@ function main() {
   parseArgs "$@"
   requirements
 
+  mkdir -p "$cacheDir"
+
   v "Executing command '$cmd'"
   case "$cmd" in
     authtest | config | list | open | branches)
       $cmd "$remainingArgs"
       ;;
-    restriction | reviewer | deploykey | repo | webhook)
+    restriction | reviewer | deploykey | repo | webhook | team)
       # shellcheck disable=SC2086
       $cmd ${remainingArgs[*]}
       ;;
