@@ -1,6 +1,10 @@
 #!/usr/bin/env bats
 
 setup() {
+  if ! hash shellmock; then
+    skip 'shellmock not installed'
+  fi
+
   . shellmock
   shellmock_clean
 
