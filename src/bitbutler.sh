@@ -561,7 +561,7 @@ function webhook() {
     list)
       [[ -n "$repo" ]] || die "Required argument 'repo' missing"
 
-      _request GET "$endpoint" |
+      _request GET "$endpoint?fields=values.uuid,values.description" |
         jq -r '.values[] | [.uuid, .description] | @tsv'
       ;;
     add)
