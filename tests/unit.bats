@@ -200,3 +200,63 @@ teardown() {
   [[ "$status" = "1" ]]
   [[ "${lines[0]}" =~ "Repository dummy/foo not found" ]]
 }
+
+@test "webhook - unknown sub cmd" {
+  run webhook foo-bar
+
+  [[ "$status" = "1" ]]
+  [[ "$output" =~ "Unknown subcommand" ]]
+}
+
+@test "webhook - list-events" {
+  run webhook list-events
+
+  [[ "$status" = "0" ]]
+  [[ "$output" =~ "repo:push" ]]
+  [[ "$output" =~ "issue:updated" ]]
+}
+
+@test "webhook - list" {
+  shellmock_expect curl \
+    --type partial \
+    --match 'dummy-repo/hooks' \
+    --status 0 \
+    --output "$(< $BATS_TEST_DIRNAME/_data/responses/webhooks.json)"
+
+  run webhook list dummy-repo
+
+  [[ "$status" = "0" ]]
+  [[ "${lines[0]}" = "$(echo -e "{00000000-0000-0000-0000-000000000000}\tJira")" ]]
+  [[ "${lines[1]}" = "$(echo -e "{00000000-0000-0000-4444-000000000000}\tPull Request Commit Links")" ]]
+  [[ "${lines[2]}" = "$(echo -e "{00000000-0000-0000-3333-000000000000}\tBitbucket code search")" ]]
+  [[ "${lines[3]}" = "$(echo -e "{00000000-0000-0000-2222-000000000000}\tChat Notifications")" ]]
+}
+
+@test "webhook - add" {
+  shellmock_expect curl \
+    --type partial \
+    --match 'dummy-repo/hooks' \
+    --status 0 \
+    --output "$(< $BATS_TEST_DIRNAME/_data/responses/webhook-added.json)"
+
+  local options
+  declare -A options
+
+  options["url"]="http://example.com"
+  options["description"]="Test"
+  events=("repo:push")
+
+  run webhook add dummy-repo
+  [[ "$status" = "0" ]]
+}
+
+@test "webhook - delete" {
+  shellmock_expect curl \
+    --type partial \
+    --match 'dummy-repo/hooks' \
+    --status 0 \
+    --output ""
+
+  run webhook delete dummy-repo 00000000-0000-0000-0000-000000000000
+  [[ "$status" = "0" ]]
+}

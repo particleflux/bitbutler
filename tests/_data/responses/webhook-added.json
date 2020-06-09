@@ -1,0 +1,18 @@
+{
+  "read_only": null,
+  "description": "Test",
+  "url": "http://example.com/",
+  "created_at": "2020-06-09T20:05:49.306097Z",
+  "active": true,
+  "subject": {
+    "type": "repository",
+    "name": "dummy-repo",
+    "full_name": "dummy/dummy-repo",
+    "uuid": "{00000000-0000-0000-0000-000000000000}"
+  },
+  "type": "webhook_subscription",
+  "events": [
+    "repo:push"
+  ],
+  "uuid": "{00000000-0000-0000-0000-000000000000}"
+}
