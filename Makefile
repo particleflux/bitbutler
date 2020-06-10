@@ -30,6 +30,9 @@ shellcheck:
 stylecheck:
 	shfmt -i 2 -ci -d src
 
+stylefix:
+	shfmt -i 2 -ci -w src
+
 clean:
 	$(RM) -r ./coverage
 	$(MAKE) -C man clean
