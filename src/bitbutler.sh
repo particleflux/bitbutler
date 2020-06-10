@@ -297,9 +297,9 @@ function checkError() {
   fi
 
   if [[ -n "$type" ]] && [[ "$type" == "error" ]]; then
-    message="$(echo -E "$response" | jq -r '.error | @text "\(.message // "")\n\(.detail // "")\n"')"
+    message="$(echo -E "$response" | jq -r '.error | @text "\(.message // "")\n\(.detail // "")\n\((.fields // "") | tostring)\n"')"
     if [[ -z "$message" ]]; then
-      die "Unknown api error"
+      die "Unknown api error: $response"
     fi
     die "$message"
   fi
