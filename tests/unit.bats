@@ -260,3 +260,26 @@ teardown() {
   run webhook delete dummy-repo 00000000-0000-0000-0000-000000000000
   [[ "$status" = "0" ]]
 }
+
+@test "project - unknown sub cmd" {
+  run project foo-bar
+
+  [[ "$status" = "1" ]]
+  [[ "$output" =~ "Unknown subcommand" ]]
+}
+
+@test "project - list" {
+  shellmock_expect curl \
+    --type partial \
+    --match 'workspaces/dummy/projects' \
+    --status 0 \
+    --output "$(< $BATS_TEST_DIRNAME/_data/responses/projects-get.json)"
+
+  run project list
+
+  [[ "$status" = "0" ]]
+  [[ "${lines[0]}" = "$(echo -e "API\tAPI")" ]]
+  [[ "${lines[1]}" = "$(echo -e "APPS\tApps")" ]]
+  [[ "${lines[2]}" = "$(echo -e "DOC\tDocumentation")" ]]
+  [[ "${lines[3]}" = "$(echo -e "IN\tInternal")" ]]
+}

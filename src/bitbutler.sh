@@ -98,6 +98,11 @@ ${b}Commands$w
         ${y}apidoc$w      Open API reference
         ${y}dashboard$w   Open the dashboard (default)
 
+    ${b}project$w ${c}SUBCOMMAND$w
+        Work with projects
+
+        ${y}list$w      List projects
+
     ${b}repo$w ${c}SUBCOMMAND$w
         Work with repositories
 
@@ -458,6 +463,25 @@ function open() {
   esac
 }
 
+function project() {
+  local subCmd response
+
+  subCmd="$1"
+  [[ -n "$subCmd" ]] || die "Required argument 'sub command' missing"
+
+  local -r endpoint="/workspaces/${bitbucket_owner}/projects"
+
+  case "$subCmd" in
+    list)
+      fetchAllPages "$endpoint?fields=next,values.key,values.name&sort=name" |
+        jq -r '.[] | [.key, .name] | @tsv'
+      ;;
+    *)
+      die "Unknown subcommand given: '$subCmd'"
+      ;;
+  esac
+}
+
 function repo() {
   local repo subCmd response
 
@@ -642,7 +666,7 @@ function main() {
     authtest | config | open | branches)
       $cmd "$remainingArgs"
       ;;
-    restriction | reviewer | deploykey | repo | webhook | team)
+    restriction | reviewer | deploykey | repo | webhook | team | project)
       # shellcheck disable=SC2086
       $cmd ${remainingArgs[*]}
       ;;

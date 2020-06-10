@@ -1,0 +1,20 @@
+{
+  "values": [
+    {
+      "name": "API",
+      "key": "API"
+    },
+    {
+      "name": "Apps",
+      "key": "APPS"
+    },
+    {
+      "name": "Documentation",
+      "key": "DOC"
+    },
+    {
+      "name": "Internal",
+      "key": "IN"
+    }
+  ]
+}
