@@ -79,6 +79,7 @@ table below.
 * [bats] and [shellmock] for running tests
 * [kcov] for generating code coverage
 * [asciidoc] for generating the man page
+* [shfmt] for code style checks
 
 ### Running tests
 
@@ -92,8 +93,15 @@ Or, with coverage:
 make coverage
 ```
 
+### Check code style
+
+```
+make stylecheck
+```
+
 [jq]: https://stedolan.github.io/jq/
 [bats]: https://github.com/bats-core/bats-core
 [kcov]: https://github.com/SimonKagstrom/kcov
 [asciidoc]: http://asciidoc.org/
 [shellmock]: https://github.com/capitalone/bash_shell_mock
+[shfmt]: https://github.com/mvdan/sh
