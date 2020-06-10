@@ -272,14 +272,14 @@ function fetchAllPages() {
   url="$1"
 
   current="$(_request GET "$@")"
-  combined="$(jq '.values' <<< "$current")"
+  combined="$(jq '.values' <<<"$current")"
 
-  while next="$(jq -re '.next' <<< "$current")" ; do
+  while next="$(jq -re '.next' <<<"$current")"; do
     nextUrl="${next#$BASE_URL}"
     dbg "nextUrl '$nextUrl'"
     current="$(_request GET "$nextUrl")"
     dbg "Response: $current"
-    currentValues="$(jq '.values' <<< "$current")"
+    currentValues="$(jq '.values' <<<"$current")"
     combined="$(echo -e "$combined\n$currentValues" | jq '.[]' | jq -s)"
   done
 
@@ -318,9 +318,9 @@ function lookupUser() {
   search="$1"
   type="${2:-"nickname"}"
 
-  if ! jq -re ".[] | select(.$type | contains(\"$search\"))" "$cacheFile" > /dev/null; then
+  if ! jq -re ".[] | select(.$type | contains(\"$search\"))" "$cacheFile" >/dev/null; then
     dbg "lookupUser: user not in cache, refreshing"
-    fetchAllPages "$endpoint" > "$cacheFile"
+    fetchAllPages "$endpoint" >"$cacheFile"
   fi
 
   userInfo="$(jq "map(select(.$type | contains(\"$search\")))" "$cacheFile")"
@@ -341,10 +341,10 @@ function getUserAttributeFromName() {
   local userBlob numUsers
 
   userBlob="$(lookupUser "$1" nickname)"
-  numUsers="$(jq 'length' <<< "$userBlob")"
+  numUsers="$(jq 'length' <<<"$userBlob")"
   checkExactlyOneMatch "$numUsers"
 
-  jq -r ".[0].$2" <<< "$userBlob"
+  jq -r ".[0].$2" <<<"$userBlob"
 }
 
 #
@@ -650,8 +650,6 @@ JSON
   esac
 }
 
-
-
 function main() {
   local cmd remainingArgs options
   declare -A options
@@ -685,5 +683,5 @@ function main() {
 }
 
 if [[ "$0" != *bats* ]]; then
-    main "$@"
+  main "$@"
 fi
