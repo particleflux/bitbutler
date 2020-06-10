@@ -74,6 +74,9 @@ Add a new project. Projects are private by default.
         --key "MYPROJ/" \\
         --description "My first project!" \\
 
+*delete* _PROJECT_KEY_
+Delete a project by KEY.
+
 *list*::
 Lists all projects in workspace _bitbucket_owner_
 

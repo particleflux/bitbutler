@@ -327,7 +327,7 @@ teardown() {
   [[ "${capture[@]}" =~ "\"description\": \"A random test description\"" ]]
 }
 
-@test "project add - fail already existing" {
+@test "project add - fail: already existing" {
   shellmock_expect curl \
     --type partial \
     --match 'workspaces/dummy/projects' \
@@ -340,4 +340,29 @@ teardown() {
 
   [[ "$status" = "1" ]]
   [[ "$output" =~ "already exists" ]]
+}
+
+@test "project delete - fail: not existing" {
+  shellmock_expect curl \
+    --type partial \
+    --match 'workspaces/dummy/projects/FOO' \
+    --status 0 \
+    --output "$(< $BATS_TEST_DIRNAME/_data/responses/projects-delete-fail.json)"
+
+  run project delete FOO
+
+  [[ "$status" = "1" ]]
+  [[ "$output" =~ "No Project matches" ]]
+}
+
+@test "project delete" {
+  shellmock_expect curl \
+    --type partial \
+    --match 'workspaces/dummy/projects/FOO' \
+    --status 0 \
+    --output ""
+
+  run project delete FOO
+
+  [[ "$status" = "0" ]]
 }

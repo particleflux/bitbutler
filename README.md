@@ -60,6 +60,7 @@ required, see table below.
 | deploykey list | repository | Repositories / Read |
 | | repository:admin | Repositories / Admin |
 | project add | project:write | Projects / Write |
+| project delete | project:write | Projects / Write |
 | project list | project | Projects / Read |
 | repo add | repository:admin | Repositories / Admin |
 | repo delete | repository:delete | Repositories / Delete |

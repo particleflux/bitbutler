@@ -98,10 +98,11 @@ ${b}Commands$w
         ${y}apidoc$w      Open API reference
         ${y}dashboard$w   Open the dashboard (default)
 
-    ${b}project$w ${c}SUBCOMMAND$w
+    ${b}project$w ${c}SUBCOMMAND$w [${c}KEY$w]
         Work with projects
 
         ${y}add$w       Create a new project
+        ${y}delete$w    Delete a project by KEY
         ${y}list$w      List projects
 
     ${b}repo$w ${c}SUBCOMMAND$w
@@ -472,7 +473,7 @@ function open() {
 }
 
 function project() {
-  local subCmd response
+  local subCmd response name key description isPrivate requestJson
 
   subCmd="$1"
   name="$2"
@@ -511,6 +512,13 @@ JSON
       response="$(_request POST "$endpoint" "$requestJson")"
       checkError "$response"
       jq -r ".links.html.href" <<<"$response"
+      ;;
+    delete)
+      key="$2"
+      [[ -n "$key" ]] || die "Required argument 'key' missing"
+
+      response="$(_request DELETE "$endpoint/$key")"
+      checkError "$response"
       ;;
     *)
       die "Unknown subcommand given: '$subCmd'"
