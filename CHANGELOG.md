@@ -5,10 +5,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Add `project list` command
+- Add `team` command
+
 ### Fixed
 - Fix error output on incomplete response
 - Add error checking on `branches` command
 - Add support for paginated requests - fixed repo list with > 100 repos
+- Fix `reviewer` commands
 
 ## 0.1.0 - 2020-01-25
 ### Added
