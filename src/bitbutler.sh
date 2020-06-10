@@ -101,6 +101,7 @@ ${b}Commands$w
     ${b}project$w ${c}SUBCOMMAND$w
         Work with projects
 
+        ${y}add$w       Create a new project
         ${y}list$w      List projects
 
     ${b}repo$w ${c}SUBCOMMAND$w
@@ -222,6 +223,13 @@ function parseArgs() {
       -e | --events)
         IFS=', ' read -r -a events <<<"$2"
         shift
+        ;;
+      -k | --key)
+        options["key"]="$2"
+        shift
+        ;;
+      -P | --public)
+        options["public"]=1
         ;;
       *)
         if beginsWith "$1" "-"; then
@@ -467,14 +475,42 @@ function project() {
   local subCmd response
 
   subCmd="$1"
+  name="$2"
   [[ -n "$subCmd" ]] || die "Required argument 'sub command' missing"
 
   local -r endpoint="/workspaces/${bitbucket_owner}/projects"
 
   case "$subCmd" in
     list)
-      fetchAllPages "$endpoint?fields=next,values.key,values.name&sort=name" |
-        jq -r '.[] | [.key, .name] | @tsv'
+      response="$(fetchAllPages "$endpoint?fields=next,values.key,values.name&sort=name")"
+      jq -r '.[] | [.key, .name] | @tsv' <<<"$response"
+      ;;
+    add)
+      [[ -n "$name" ]] || die "Required argument 'name' missing"
+      [[ -n "${options[key]}" ]] || die "Required argument 'key' missing"
+
+      description="${options[description]:-""}"
+      isPrivate="true"
+      if [[ -n "${options["public"]}" ]]; then
+        isPrivate="false"
+      fi
+
+      requestJson="$(
+        cat <<JSON
+{
+  "name": "$name",
+  "key": "${options[key]}",
+  "description": "$description",
+  "is_private": $isPrivate
+}
+JSON
+      )"
+
+      dbg "Adding project with config $requestJson"
+
+      response="$(_request POST "$endpoint" "$requestJson")"
+      checkError "$response"
+      jq -r ".links.html.href" <<<"$response"
       ;;
     *)
       die "Unknown subcommand given: '$subCmd'"

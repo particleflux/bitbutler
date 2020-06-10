@@ -1,0 +1,12 @@
+{
+  "type": "error",
+  "error": {
+    "fields": {
+      "__all__": [
+        "Project with this Owner and Key already exists.",
+        "Project with this Name and Owner already exists."
+      ]
+    },
+    "message": "Bad request"
+  }
+}

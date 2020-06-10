@@ -46,8 +46,8 @@ manpage.
 Run `bitbutler config` to write a default configuration. You should [create a
 restricted app password](https://bitbucket.org/account/settings/app-passwords/new)
 instead of using your actual password which has full access to your account.
-Depending on what you want to with bitbutler, different scopes are required, see
-table below.
+Depending on what you want to do with _bitbutler_, different scopes are
+required, see table below.
 
 | Bitbutler command | required scope | Name the bitbucket GUI |
 |:---|:---|:---|
@@ -59,6 +59,8 @@ table below.
 | | repository:admin | Repositories / Admin |
 | deploykey list | repository | Repositories / Read |
 | | repository:admin | Repositories / Admin |
+| project add | project:write | Projects / Write |
+| project list | project | Projects / Read |
 | repo add | repository:admin | Repositories / Admin |
 | repo delete | repository:delete | Repositories / Delete |
 | repo list | repository | Repositories / Read |

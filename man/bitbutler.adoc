@@ -67,8 +67,26 @@ Work with projects.
 
 ==== subcommands
 
+*add* _PROJECT_ _OPTIONS_...::
+Add a new project. Projects are private by default.
+
+    bitbutler project add my-project \\
+        --key "MYPROJ/" \\
+        --description "My first project!" \\
+
 *list*::
 Lists all projects in workspace _bitbucket_owner_
+
+==== Specific options
+
+*-k, --key*::
+The project key. Upper case shorthand (e.g. `AT` for `Atlassian`)
+
+*-d, --description*::
+An optional description for the project.
+
+*-P, --public*::
+Make the project public. Projects are private by default.
 
 === repo _SUBCOMMAND_
 Work with repositories.

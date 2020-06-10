@@ -283,3 +283,61 @@ teardown() {
   [[ "${lines[2]}" = "$(echo -e "DOC\tDocumentation")" ]]
   [[ "${lines[3]}" = "$(echo -e "IN\tInternal")" ]]
 }
+
+@test "project - add private" {
+  shellmock_expect curl \
+    --type partial \
+    --match 'workspaces/dummy/projects' \
+    --status 0 \
+    --output "$(< $BATS_TEST_DIRNAME/_data/responses/projects-created.json)"
+
+  declare -A options
+  options["key"]="FOO"
+  run project add foo
+
+  [[ "$status" = "0" ]]
+  [[ "${lines[0]}" = "https://bitbucket.org/dummy/workspace/projects/FOO" ]]  # html link is output
+
+  shellmock_verify
+  echo "${capture[@]}"
+  [[ "${capture[@]}" =~ "\"is_private\": true" ]]
+}
+
+@test "project - add public" {
+  shellmock_expect curl \
+    --type partial \
+    --match 'workspaces/dummy/projects' \
+    --status 0 \
+    --output "$(< $BATS_TEST_DIRNAME/_data/responses/projects-created.json)"
+
+  declare -A options
+  options["key"]="FOO"
+  options["description"]="A random test description"
+  options["public"]=1
+  run project add foo
+
+  [[ "$status" = "0" ]]
+  [[ "${lines[0]}" = "https://bitbucket.org/dummy/workspace/projects/FOO" ]]  # html link is output
+
+  shellmock_verify
+  echo "${capture[@]}"
+  [[ "${capture[@]}" =~ "\"is_private\": false" ]]
+  [[ "${capture[@]}" =~ "\"key\": \"FOO\"" ]]
+  [[ "${capture[@]}" =~ "\"name\": \"foo\"" ]]
+  [[ "${capture[@]}" =~ "\"description\": \"A random test description\"" ]]
+}
+
+@test "project add - fail already existing" {
+  shellmock_expect curl \
+    --type partial \
+    --match 'workspaces/dummy/projects' \
+    --status 0 \
+    --output "$(< $BATS_TEST_DIRNAME/_data/responses/projects-already-existing.json)"
+
+  declare -A options
+  options["key"]="FOO"
+  run project add foo
+
+  [[ "$status" = "1" ]]
+  [[ "$output" =~ "already exists" ]]
+}
