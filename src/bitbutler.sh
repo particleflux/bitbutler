@@ -346,24 +346,6 @@ function getUserAttributeFromName() {
 # Commands
 #
 
-function open() {
-  local what
-
-  what=${1:-dashboard}
-
-  case "$what" in
-    apidoc)
-      xdg-open "https://developer.atlassian.com/bitbucket/api/2/reference/resource/"
-      ;;
-    dashboard)
-      xdg-open "https://bitbucket.org/dashboard/overview"
-      ;;
-    *)
-      die "Unknown page given: '$what'"
-      ;;
-  esac
-}
-
 function authtest() {
   local response username
 
@@ -374,6 +356,19 @@ function authtest() {
   else
     e "authentication failed"
   fi
+}
+
+function branches() {
+  local repo
+
+  repo="$1"
+  if [[ -z "$repo" ]]; then
+    die "Required argument REPO missing"
+  fi
+
+  response=$(_request GET "/repositories/${bitbucket_owner}/$repo/refs?pagelen=100&fields=values.type,values.name")
+  checkError "$response"
+  echo -n "$response" | jq -r '.values[] | select(.type = "branch") | .name'
 }
 
 function config() {
@@ -404,17 +399,93 @@ BASH
   l "Created config file $configfile - please edit"
 }
 
-function branches() {
-  local repo
+function deploykey() {
+  local repo subCmd label key response
 
-  repo="$1"
-  if [[ -z "$repo" ]]; then
-    die "Required argument REPO missing"
-  fi
+  subCmd="$1"
+  repo="$2"
+  label="$3"
+  key="$4"
+  [[ -n "$subCmd" ]] || die "Required argument 'sub command' missing"
+  [[ -n "$repo" ]] || die "Required argument 'repo' missing"
 
-  response=$(_request GET "/repositories/${bitbucket_owner}/$repo/refs?pagelen=100&fields=values.type,values.name")
-  checkError "$response"
-  echo -n "$response" | jq -r '.values[] | select(.type = "branch") | .name'
+  local -r endpoint="/repositories/${bitbucket_owner}/$repo/deploy-keys"
+
+  case "$subCmd" in
+    list)
+      response=$(_request GET "$endpoint")
+      checkError "$response"
+      v "Response: $response"
+
+      echo -n "$response" | jq -r '.values[] | [.id, .label] | @tsv'
+      ;;
+    add)
+      [[ -n "$label" ]] || die "Required argument 'label' missing"
+      [[ -n "$key" ]] || die "Required argument 'key' missing"
+
+      v "Adding key with label '$label' and key '$key'"
+
+      response="$(_request POST "$endpoint" "{\"key\": \"$key\", \"label\": \"$label\"}")"
+      checkError "$response"
+      ;;
+    delete)
+      [[ -n "$label" ]] || die "Required argument 'id' missing"
+      # label is misused as id here
+      response="$(_request DELETE "$endpoint/$label")"
+      checkError "$response"
+      ;;
+    *)
+      die "Unknown subcommand given: '$subCmd'"
+      ;;
+  esac
+}
+
+function open() {
+  local what
+
+  what=${1:-dashboard}
+
+  case "$what" in
+    apidoc)
+      xdg-open "https://developer.atlassian.com/bitbucket/api/2/reference/resource/"
+      ;;
+    dashboard)
+      xdg-open "https://bitbucket.org/dashboard/overview"
+      ;;
+    *)
+      die "Unknown page given: '$what'"
+      ;;
+  esac
+}
+
+function repo() {
+  local repo subCmd response
+
+  subCmd="$1"
+  repo="$2"
+  [[ -n "$subCmd" ]] || die "Required argument 'sub command' missing"
+
+  local -r endpoint="/repositories/${bitbucket_owner}/"
+
+  case "$subCmd" in
+    delete)
+      [[ -n "$repo" ]] || die "Required argument 'repo' missing"
+      # option --force => non-interactive
+
+      # this is an optional parameter, not what shellcheck thinks
+      # shellcheck disable=SC2119
+      confirm
+      response="$(_request DELETE "$endpoint$repo")"
+      checkError "$response"
+      ;;
+    list)
+      fetchAllPages "$endpoint?pagelen=100&fields=next,values.full_name&sort=full_name" |
+        jq -r ".[].full_name | sub(\"$bitbucket_owner/\"; \"\")"
+      ;;
+    *)
+      die "Unknown subcommand given: '$subCmd'"
+      ;;
+  esac
 }
 
 function restriction() {
@@ -476,70 +547,20 @@ function reviewer() {
   esac
 }
 
-function deploykey() {
-  local repo subCmd label key response
+function team() {
+  local team subCmd response
 
   subCmd="$1"
-  repo="$2"
-  label="$3"
-  key="$4"
+  team="$2"
   [[ -n "$subCmd" ]] || die "Required argument 'sub command' missing"
-  [[ -n "$repo" ]] || die "Required argument 'repo' missing"
+  [[ -n "$team" ]] || die "Required argument 'team' missing"
 
-  local -r endpoint="/repositories/${bitbucket_owner}/$repo/deploy-keys"
+  local -r endpoint="/teams/${bitbucket_owner}"
 
   case "$subCmd" in
-    list)
-      response=$(_request GET "$endpoint")
-      checkError "$response"
-      v "Response: $response"
-
-      echo -n "$response" | jq -r '.values[] | [.id, .label] | @tsv'
-      ;;
-    add)
-      [[ -n "$label" ]] || die "Required argument 'label' missing"
-      [[ -n "$key" ]] || die "Required argument 'key' missing"
-
-      v "Adding key with label '$label' and key '$key'"
-
-      response="$(_request POST "$endpoint" "{\"key\": \"$key\", \"label\": \"$label\"}")"
-      checkError "$response"
-      ;;
-    delete)
-      [[ -n "$label" ]] || die "Required argument 'id' missing"
-      # label is misused as id here
-      response="$(_request DELETE "$endpoint/$label")"
-      checkError "$response"
-      ;;
-    *)
-      die "Unknown subcommand given: '$subCmd'"
-      ;;
-  esac
-}
-
-function repo() {
-  local repo subCmd response
-
-  subCmd="$1"
-  repo="$2"
-  [[ -n "$subCmd" ]] || die "Required argument 'sub command' missing"
-
-  local -r endpoint="/repositories/${bitbucket_owner}/"
-
-  case "$subCmd" in
-    delete)
-      [[ -n "$repo" ]] || die "Required argument 'repo' missing"
-      # option --force => non-interactive
-
-      # this is an optional parameter, not what shellcheck thinks
-      # shellcheck disable=SC2119
-      confirm
-      response="$(_request DELETE "$endpoint$repo")"
-      checkError "$response"
-      ;;
-    list)
-      fetchAllPages "$endpoint?pagelen=100&fields=next,values.full_name&sort=full_name" |
-        jq -r ".[].full_name | sub(\"$bitbucket_owner/\"; \"\")"
+    members)
+      _request GET "$endpoint/members" |
+        jq -r '.values[] | [.nickname] | @tsv'
       ;;
     *)
       die "Unknown subcommand given: '$subCmd'"
@@ -605,26 +626,7 @@ JSON
   esac
 }
 
-function team() {
-  local team subCmd response
 
-  subCmd="$1"
-  team="$2"
-  [[ -n "$subCmd" ]] || die "Required argument 'sub command' missing"
-  [[ -n "$team" ]] || die "Required argument 'team' missing"
-
-  local -r endpoint="/teams/${bitbucket_owner}"
-
-  case "$subCmd" in
-    members)
-      _request GET "$endpoint/members" |
-        jq -r '.values[] | [.nickname] | @tsv'
-      ;;
-    *)
-      die "Unknown subcommand given: '$subCmd'"
-      ;;
-  esac
-}
 
 function main() {
   local cmd remainingArgs options
