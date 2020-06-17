@@ -196,7 +196,7 @@ Bitbucket repository owner. This is the prefix to all your repositories.
 === Processing Information
 
 *-v, --verbose*::
-Verbose output. May include debugging information.
+Verbose output.
 
 *-q, --quiet*::
 Silence log messages.

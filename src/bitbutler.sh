@@ -429,7 +429,6 @@ function deploykey() {
     list)
       response=$(_request GET "$endpoint")
       checkError "$response"
-      v "Response: $response"
 
       echo -n "$response" | jq -r '.values[] | [.id, .label] | @tsv'
       ;;
@@ -673,7 +672,7 @@ function webhook() {
 JSON
       )"
 
-      v "Adding webhook with config $requestJson"
+      dbg "Adding webhook with config $requestJson"
 
       response="$(_request POST "$endpoint" "$requestJson")"
       checkError "$response"
@@ -703,7 +702,7 @@ function main() {
 
   mkdir -p "$cacheDir"
 
-  v "Executing command '$cmd'"
+  dbg "Executing command '$cmd'"
   case "$cmd" in
     authtest | config | open | branches)
       $cmd "$remainingArgs"
