@@ -21,6 +21,7 @@ persist:
 	$(file >> $(PERSIST_FILE),BINDIR=$(BINDIR))
 	$(file >> $(PERSIST_FILE),DATADIR=$(DATADIR))
 	$(file >> $(PERSIST_FILE),MANDIR=$(MANDIR))
+	$(file >> $(PERSIST_FILE),DESTDIR=$(DESTDIR))
 
 doc:
 	$(MAKE) -C man

@@ -702,7 +702,7 @@ JSON
 }
 
 function selfupdate() {
-  REPOSITORY_SLUG="yiisoft/yii2"
+  REPOSITORY_SLUG="particleflux/bitbutler"
   SELFUPDATE_WORKING_DIR='/tmp/bitbutler-selfupdate'
   SETTINGS_FILE="$BB_VENDOR_PATH/make.settings"
 
@@ -732,7 +732,7 @@ function selfupdate() {
   tarball_url=$(jq --raw-output '.tarball_url' <<<"${latest_tag_json}")
   tarball_path="${SELFUPDATE_WORKING_DIR}/tarball.tar.gz"
 
-  rm -r "${SELFUPDATE_WORKING_DIR}"
+  rm -rf "${SELFUPDATE_WORKING_DIR}"
   mkdir "${SELFUPDATE_WORKING_DIR}"
 
   v "Downloading tarball from ${tarball_url}"
