@@ -1,3 +1,8 @@
 coverage/
 shellmock.out
 shellmock.err
+
+# Ignore directories created by IDEs
+.idea/
+.vscode/
+.history/
