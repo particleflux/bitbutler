@@ -712,15 +712,15 @@ function selfupdate() {
     "https://api.github.com/repos/${REPOSITORY_SLUG}/releases" |
     jq '.[0]')
 
-  if [ "$latest_tag_json" == "null" ]; then
+  if [[ "$latest_tag_json" == "null" ]]; then
     die "No releases yet, cannot update"
   fi
 
-  latest_tag_name=$(echo "$latest_tag_json" | jq --raw-output '.tag_name')
+  latest_tag_name=$(jq --raw-output '.tag_name' <<<"$latest_tag_json")
 
   v "Current script version: ${SCRIPT_VERSION}"
   v "Latest version is: $latest_tag_name"
-  if [ "$latest_tag_name" != "${SCRIPT_VERSION}" ]; then
+  if [[ "$latest_tag_name" != "${SCRIPT_VERSION}" ]]; then
     l "Your version is outdated."
   else
     l "You already have the lasted version."
@@ -729,7 +729,7 @@ function selfupdate() {
 
   confirm "Do you want to update now?"
 
-  tarball_url=$(echo "${latest_tag_json}" | jq --raw-output '.tarball_url')
+  tarball_url=$(jq --raw-output '.tarball_url' <<<"${latest_tag_json}")
   tarball_path="${SELFUPDATE_WORKING_DIR}/tarball.tar.gz"
 
   rm -r "${SELFUPDATE_WORKING_DIR}"
@@ -750,7 +750,7 @@ function selfupdate() {
   unpacked_tar=$(find "${SELFUPDATE_WORKING_DIR}" -mindepth 1 -maxdepth 1 -type d)
 
   v "Looking for a settings file at ${SETTINGS_FILE}"
-  if [ ! -f "${SETTINGS_FILE}" ]; then
+  if [[ ! -f "${SETTINGS_FILE}" ]]; then
     e "I have not found a make.settings file describing your installation, so you probably installed the script before"
     e "the selfupdate functionality was added. Please go to ${unpacked_tar} and run make manually one last time."
     e "Remember to set PREFIX and the other variables correctly before running make (just in case you modified them"
