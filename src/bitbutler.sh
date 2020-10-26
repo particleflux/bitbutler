@@ -566,8 +566,9 @@ function restriction() {
 
   case "$subCmd" in
     list)
-      _request GET "/repositories/${bitbucket_owner}/$repo/branch-restrictions?pagelen=100" |
-        jq -r '.values[] | [.pattern, .kind, .value]'
+      response=$(_request GET "/repositories/${bitbucket_owner}/$repo/branch-restrictions?pagelen=100")
+      checkError "$response"
+      echo -n "$response" | jq -r '.values[] | [.pattern, .kind, .value]'
       ;;
     *)
       die "Unknown subcommand given: '$subCmd'"
@@ -588,8 +589,9 @@ function reviewer() {
 
   case "$subCmd" in
     list)
-      _request GET "$endpoint" |
-        jq -r '.values[] | [.nickname] | @tsv'
+      response=$(_request GET "$endpoint")
+      checkError "$response"
+      echo -n "$response" | jq -r '.values[] | [.nickname] | @tsv'
       ;;
     add)
       [[ -n "$username" ]] || die "Required argument 'username' missing"
@@ -626,8 +628,9 @@ function team() {
 
   case "$subCmd" in
     members)
-      _request GET "$endpoint/members" |
-        jq -r '.values[] | [.nickname] | @tsv'
+      response=$(_request GET "$endpoint/members")
+      checkError "$response"
+      echo -n "$response" | jq -r '.values[] | [.nickname] | @tsv'
       ;;
     *)
       die "Unknown subcommand given: '$subCmd'"
@@ -649,8 +652,9 @@ function webhook() {
     list)
       [[ -n "$repo" ]] || die "Required argument 'repo' missing"
 
-      _request GET "$endpoint?fields=values.uuid,values.description" |
-        jq -r '.values[] | [.uuid, .description] | @tsv'
+      response=$(_request GET "$endpoint?fields=values.uuid,values.description")
+      checkError "$response"
+      echo -n "$response" | jq -r '.values[] | [.uuid, .description] | @tsv'
       ;;
     add)
       [[ -n "$repo" ]] || die "Required argument 'repo' missing"

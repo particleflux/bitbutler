@@ -72,7 +72,7 @@ jobs:
             sed -ri "s#<source>(.+)/</source>#<source>\1</source>#" "$xml"
 
             /tmp/cc-test-reporter format-coverage $xml --input-type cobertura
-            /tmp/cc-test-reporter upload-coverage
+            /tmp/cc-test-reporter upload-coverage || /bin/true
 
       - store_artifacts:
           path: coverage
