@@ -79,7 +79,7 @@ required, see table below.
 
 ### Requirements
 
-* [bats] and [shellmock] for running tests
+* [bats] >=1.2.1 and [shellmock] for running tests
 * [kcov] for generating code coverage
 * [asciidoc] for generating the man page
 * [shfmt] for code style checks
