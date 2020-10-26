@@ -62,6 +62,14 @@ _PAGE_ can be one of:
 * *apidoc*      Open bitbucket API reference
 * *dashboard*   Open the dashboard (default)
 
+=== pullrequest _SUBCOMMAND_
+Work with pull requests
+
+==== subcommands
+
+*list* _REPO_::
+Lists all pull requests in that repository.
+
 === project _SUBCOMMAND_
 Work with projects.
 

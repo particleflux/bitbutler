@@ -268,6 +268,19 @@ teardown() {
   [[ "$output" =~ "Unknown subcommand" ]]
 }
 
+@test "pullrequest - list" {
+    shellmock_expect curl \
+      --type partial \
+      --match 'repositories/dummy/dummy-repo/pullrequests' \
+      --status 0 \
+      --output "$(< $BATS_TEST_DIRNAME/_data/responses/pullrequest-list.json)"
+
+    run pullrequest list "dummy-repo"
+
+  [[ "$status" = "0" ]]
+  [[ "${lines[0]}" = "$(echo -e "420\tPullrequest title\tJohn Doe | SpaceShips")" ]]
+}
+
 @test "project - list" {
   shellmock_expect curl \
     --type partial \

@@ -105,6 +105,11 @@ ${b}Commands$w
         ${y}delete$w    Delete a project by KEY
         ${y}list$w      List projects
 
+    ${b}pullrequest ${c}SUBCOMMAND$w ${c}REPO$w
+        Work with pull requests
+
+        ${y}list$w      List pull requests
+
     ${b}repo$w ${c}SUBCOMMAND$w
         Work with repositories
 
@@ -525,6 +530,26 @@ JSON
   esac
 }
 
+function pullrequest() {
+  local repo subCmd response
+
+  subCmd="$1"
+  repo="$2"
+
+  [[ -n "$subCmd" ]] || die "Required argument 'sub command' missing"
+  [[ -n "$repo" ]] || die "Required argument 'repo' missing"
+
+  local -r endpoint="/repositories/${bitbucket_owner}/${repo}/pullrequests"
+
+  case "$subCmd" in
+    list)
+      response=$(_request GET "$endpoint") # if you need pagination here, you lost control of your life, sorry.
+      checkError "$response"
+      jq -r '.values[] | [ .id, .title, .author.display_name ] | @tsv' <<<"$response"
+      ;;
+  esac
+}
+
 function repo() {
   local repo subCmd response
 
@@ -711,7 +736,7 @@ function main() {
     authtest | config | open | branches)
       $cmd "$remainingArgs"
       ;;
-    restriction | reviewer | deploykey | repo | webhook | team | project)
+    restriction | reviewer | deploykey | repo | webhook | team | project | pullrequest)
       # shellcheck disable=SC2086
       $cmd ${remainingArgs[*]}
       ;;
