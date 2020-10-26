@@ -57,6 +57,7 @@ jobs:
           key: v3-dependencies
 
       - run:
+          name: Run tests
           command: |
             export PATH="$HOME/bin:$PATH"
 
