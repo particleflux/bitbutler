@@ -1,0 +1,149 @@
+{
+  "pagelen": 10,
+  "values": [
+    {
+      "description": "Pullrequest description text",
+      "links": {
+        "decline": {
+          "href": "https://api.bitbucket.org/2.0/repositories/dummy/dummy-repo/pullrequests/420/decline"
+        },
+        "diffstat": {
+          "href": "https://api.bitbucket.org/2.0/repositories/dummy/dummy-repo/diffstat/dummy/dummy-repo:26074e33de07%0Dae8a88a8ab79?from_pullrequest_id=420"
+        },
+        "commits": {
+          "href": "https://api.bitbucket.org/2.0/repositories/dummy/dummy-repo/pullrequests/420/commits"
+        },
+        "self": {
+          "href": "https://api.bitbucket.org/2.0/repositories/dummy/dummy-repo/pullrequests/420"
+        },
+        "comments": {
+          "href": "https://api.bitbucket.org/2.0/repositories/dummy/dummy-repo/pullrequests/420/comments"
+        },
+        "merge": {
+          "href": "https://api.bitbucket.org/2.0/repositories/dummy/dummy-repo/pullrequests/420/merge"
+        },
+        "html": {
+          "href": "https://bitbucket.org/dummy/dummy-repo/pull-requests/420"
+        },
+        "activity": {
+          "href": "https://api.bitbucket.org/2.0/repositories/dummy/dummy-repo/pullrequests/420/activity"
+        },
+        "diff": {
+          "href": "https://api.bitbucket.org/2.0/repositories/dummy/dummy-repo/diff/dummy/dummy-repo:26074e33de07%0Dae8a88a8ab79?from_pullrequest_id=420"
+        },
+        "approve": {
+          "href": "https://api.bitbucket.org/2.0/repositories/dummy/dummy-repo/pullrequests/420/approve"
+        },
+        "statuses": {
+          "href": "https://api.bitbucket.org/2.0/repositories/dummy/dummy-repo/pullrequests/420/statuses"
+        }
+      },
+      "title": "Pullrequest title",
+      "close_source_branch": true,
+      "type": "pullrequest",
+      "id": 420,
+      "destination": {
+        "commit": {
+          "hash": "ae8a88a8ab79",
+          "type": "commit",
+          "links": {
+            "self": {
+              "href": "https://api.bitbucket.org/2.0/repositories/dummy/dummy-repo/commit/ae8a88a8ab79"
+            },
+            "html": {
+              "href": "https://bitbucket.org/dummy/repository/commits/ae8a88a8ab79"
+            }
+          }
+        },
+        "repository": {
+          "links": {
+            "self": {
+              "href": "https://api.bitbucket.org/2.0/repositories/dummy/dummy-repo"
+            },
+            "html": {
+              "href": "https://bitbucket.org/dummy/dummy-repo"
+            },
+            "avatar": {
+              "href": "https://bytebucket.org/ravatar/%7B27242d25-acb6-46e3-8629-c7b24f77901d%7D?ts=default"
+            }
+          },
+          "type": "repository",
+          "name": "dummy-repo",
+          "full_name": "dummy/dummy-repo",
+          "uuid": "{27242d25-acb6-4222-1111-0123456789ab}"
+        },
+        "branch": {
+          "name": "master"
+        }
+      },
+      "created_on": "2020-09-29T15:03:44.649920+00:00",
+      "summary": {
+        "raw": "Did some changes",
+        "markup": "markdown",
+        "html": "<strong>Did some changes</strong>",
+        "type": "rendered"
+      },
+      "source": {
+        "commit": {
+          "hash": "26074e33de07",
+          "type": "commit",
+          "links": {
+            "self": {
+              "href": "https://api.bitbucket.org/2.0/repositories/dummy/dummy-repo/commit/26074e33de07"
+            },
+            "html": {
+              "href": "https://bitbucket.org/dummy/dummy-repo/commits/26074e33de07"
+            }
+          }
+        },
+        "repository": {
+          "links": {
+            "self": {
+              "href": "https://api.bitbucket.org/2.0/repositories/dummy/dummy-repo"
+            },
+            "html": {
+              "href": "https://bitbucket.org/dummy/dummy-repo"
+            },
+            "avatar": {
+              "href": "https://bytebucket.org/ravatar/%7B27242d25-acb6-46e3-8629-c7b24f77901d%7D?ts=default"
+            }
+          },
+          "type": "repository",
+          "name": "dummy-repo",
+          "full_name": "dummy/dummy-repo",
+          "uuid": "{27242d25-acb6-46e3-8629-c7b24f77901d}"
+        },
+        "branch": {
+          "name": "add-feature"
+        }
+      },
+      "comment_count": 0,
+      "state": "OPEN",
+      "task_count": 0,
+      "reason": "",
+      "updated_on": "2020-09-29T15:03:48.118495+00:00",
+      "author": {
+        "display_name": "John Doe | SpaceShips",
+        "uuid": "{cc6e4358-aaaa-4000-1111-0123456789ab}",
+        "links": {
+          "self": {
+            "href": "https://api.bitbucket.org/2.0/users/%7Bcc6e4358-aaaa-4000-1111-0123456789ab%7D"
+          },
+          "html": {
+            "href": "https://bitbucket.org/%7Bcc6e4358-aaaa-4000-1111-0123456789ab%7D/"
+          },
+          "avatar": {
+            "href": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/123456789aabbccddeeff112/aa586b12-4000-bbbb-cccc-0123456789ab/128"
+          }
+        },
+        "nickname": "John Doe | SpaceShips",
+        "type": "user",
+        "account_id": "123456789aabbccddeeff112"
+      },
+      "merge_commit": null,
+      "closed_by": null
+    }
+  ],
+  "page": 1,
+  "size": 1
+}
