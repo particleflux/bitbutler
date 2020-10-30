@@ -68,13 +68,15 @@ Work with pull requests
 ==== subcommands
 
 *approve* _REPO_ _PULL_REQUEST_ID_::
-Approve pull request with given id
+Approve pull request with given id. You can retrieve the _PULL_REQUEST_ID_ from the first column of the output
+of `pullrequest list`.
 
 *list* _REPO_::
 Lists all pull requests in that repository.
 
 *unapprove* _REPO_ _PULL_REQUEST_ID_::
-Unapprove pull request with given id
+Unapprove pull request with given id. You can retrieve the _PULL_REQUEST_ID_ from the first column of the output
+of `pullrequest list`.
 
 === project _SUBCOMMAND_
 Work with projects.
