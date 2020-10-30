@@ -105,10 +105,12 @@ ${b}Commands$w
         ${y}delete$w    Delete a project by KEY
         ${y}list$w      List projects
 
-    ${b}pullrequest ${c}SUBCOMMAND$w ${c}REPO$w
+    ${b}pullrequest ${c}SUBCOMMAND$w ${c}REPO$w ${c}[PULL_REQUEST_ID]$w
         Work with pull requests
 
-        ${y}list$w      List pull requests
+        ${y}approve$w     Approve pull request with given id
+        ${y}list$w        List pull requests
+        ${y}unapprove$w   Unapprove pull request with given id
 
     ${b}repo$w ${c}SUBCOMMAND$w
         Work with repositories
@@ -535,6 +537,7 @@ function pullrequest() {
 
   subCmd="$1"
   repo="$2"
+  pullrequestId="$3"
 
   [[ -n "$subCmd" ]] || die "Required argument 'sub command' missing"
   [[ -n "$repo" ]] || die "Required argument 'repo' missing"
@@ -546,6 +549,18 @@ function pullrequest() {
       response=$(_request GET "$endpoint") # if you need pagination here, you lost control of your life, sorry.
       checkError "$response"
       jq -r '.values[] | [ .id, .title, .author.display_name ] | @tsv' <<<"$response"
+      ;;
+    approve)
+      [[ -n "$pullrequestId" ]] || die "Required argument 'pullrequestId' missing"
+      response=$(_request POST "${endpoint}/${pullrequestId}/approve" "{}")
+      checkError "$response"
+      echo 'Pull request approved'
+      ;;
+    unapprove)
+      [[ -n "$pullrequestId" ]] || die "Required argument 'pullrequestId' missing"
+      response=$(_request DELETE "${endpoint}/${pullrequestId}/approve" "{}")
+      checkError "$response"
+      echo 'Pull request unapproved'
       ;;
   esac
 }
