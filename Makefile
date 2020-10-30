@@ -12,7 +12,7 @@ install: doc
 	$(INSTALL) -D -t "${DESTDIR}${DATADIR}/${PROGRAM_NAME}" src/*.sh
 	$(INSTALL) -D man/bitbutler.1 $(DESTDIR)$(MANDIR)/man1/${PROGRAM_NAME}.1
 	mkdir -p "${DESTDIR}${BINDIR}"
-	echo -e '#!/usr/bin/env bash\nBB_VENDOR_PATH="${DESTDIR}${DATADIR}/${PROGRAM_NAME}" exec ${DESTDIR}${DATADIR}/${PROGRAM_NAME}/bitbutler.sh "$$@"' > "${DESTDIR}${BINDIR}/${PROGRAM_NAME}"
+	printf '#!/usr/bin/env bash\nBB_VENDOR_PATH="${DESTDIR}${DATADIR}/${PROGRAM_NAME}" exec ${DESTDIR}${DATADIR}/${PROGRAM_NAME}/bitbutler.sh "$$@"' > "${DESTDIR}${BINDIR}/${PROGRAM_NAME}"
 	chmod u+rwx,g+x,o+x "${DESTDIR}${BINDIR}/${PROGRAM_NAME}"
 
 doc:
