@@ -67,8 +67,14 @@ Work with pull requests
 
 ==== subcommands
 
+*approve* _REPO_ _PULL_REQUEST_ID_::
+Approve pull request with given id
+
 *list* _REPO_::
 Lists all pull requests in that repository.
+
+*unapprove* _REPO_ _PULL_REQUEST_ID_::
+Unapprove pull request with given id
 
 === project _SUBCOMMAND_
 Work with projects.
