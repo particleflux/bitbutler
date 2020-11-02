@@ -139,6 +139,9 @@ List default reviewers.
 
     bitbutler reviewer list my-repo
 
+=== selfupdate
+Check for a newer version for this script and download it
+
 === team _SUBCOMMAND_ _TEAM_
 Work with teams.
 
