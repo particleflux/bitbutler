@@ -723,7 +723,7 @@ function selfupdate() {
   if [[ "$latest_tag_name" != "${SCRIPT_VERSION}" ]]; then
     l "Your version is outdated."
   else
-    l "You already have the lasted version."
+    l "You already have the latest version."
     exit 0
   fi
 
