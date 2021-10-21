@@ -2,7 +2,7 @@
 set -o pipefail
 IFS=$'\n\t'
 
-readonly SCRIPT_VERSION="0.2.0"
+readonly SCRIPT_VERSION="0.3.0"
 readonly BASE_URL=https://api.bitbucket.org/2.0
 readonly hookEvents=(
   "repo:push"

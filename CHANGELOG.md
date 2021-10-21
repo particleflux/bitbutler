@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.3.0] - 2021-10-21
+### Added
+- `selfupdate` functionality #13 (thx @DBX12)
+
 ## [0.2.0] - 2021-10-21
 ### Added
 - `pullrequest` commands (list/approve/unapprove) #14 #16 (thx @DBX12)
@@ -14,5 +18,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Initial version
 
-[Unreleased]: https://github.com/particleflux/bitbutler/compare/0.2.0...HEAD
+[Unreleased]: https://github.com/particleflux/bitbutler/compare/0.3.0...HEAD
+[0.3.0]: https://github.com/particleflux/bitbutler/compare/0.2.0..0.3.0
 [0.2.0]: https://github.com/particleflux/bitbutler/compare/0.1.0..0.2.0
