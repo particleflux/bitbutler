@@ -133,6 +133,9 @@ ${b}Commands$w
         ${y}delete$w    Delete a default reviewer
         ${y}list$w      List default reviewers
 
+    ${b}selfupdate$w
+        Check for a newer version for this script and download it
+
     ${b}team$w ${c}SUBCOMMAND$w ${c}team$w
         Work with teams
 
@@ -737,6 +740,69 @@ JSON
   esac
 }
 
+function selfupdate() {
+  REPOSITORY_SLUG="particleflux/bitbutler"
+  SELFUPDATE_WORKING_DIR='/tmp/bitbutler-selfupdate'
+  SETTINGS_FILE="$BB_VENDOR_PATH/make.settings"
+
+  latest_tag_json=$(curl \
+    --silent \
+    --header "Accept: application/vnd.github.v3+json" \
+    "https://api.github.com/repos/${REPOSITORY_SLUG}/releases" |
+    jq '.[0]')
+
+  if [[ "$latest_tag_json" == "null" ]]; then
+    die "No releases yet, cannot update"
+  fi
+
+  latest_tag_name=$(jq --raw-output '.tag_name' <<<"$latest_tag_json")
+
+  v "Current script version: ${SCRIPT_VERSION}"
+  v "Latest version is: $latest_tag_name"
+  if [[ "$latest_tag_name" != "${SCRIPT_VERSION}" ]]; then
+    l "Your version is outdated."
+  else
+    l "You already have the latest version."
+    exit 0
+  fi
+
+  confirm "Do you want to update now?"
+
+  tarball_url=$(jq --raw-output '.tarball_url' <<<"${latest_tag_json}")
+  tarball_path="${SELFUPDATE_WORKING_DIR}/tarball.tar.gz"
+
+  rm -rf "${SELFUPDATE_WORKING_DIR}"
+  mkdir "${SELFUPDATE_WORKING_DIR}"
+
+  v "Downloading tarball from ${tarball_url}"
+  curl \
+    --location \
+    --progress-bar \
+    --output "${SELFUPDATE_WORKING_DIR}/tarball.tar.gz" \
+    "${tarball_url}"
+
+  #Todo verification with a gpg key
+
+  v "Unpacking tarball at ${tarball_path}"
+  tar --extract --gunzip --file "${tarball_path}" --directory "${SELFUPDATE_WORKING_DIR}/"
+
+  unpacked_tar=$(find "${SELFUPDATE_WORKING_DIR}" -mindepth 1 -maxdepth 1 -type d)
+
+  v "Looking for a settings file at ${SETTINGS_FILE}"
+  if [[ ! -f "${SETTINGS_FILE}" ]]; then
+    e "I have not found a make.settings file describing your installation, so you probably installed the script before"
+    e "the selfupdate functionality was added. Please go to ${unpacked_tar} and run make manually one last time."
+    e "Remember to set PREFIX and the other variables correctly before running make (just in case you modified them"
+    e "during the installation last time)."
+    die "Cannot install automatically"
+  fi
+
+  # This file cannot be followed but also does not add important information for the script.
+  #shellcheck disable=SC1090
+  source "${BB_VENDOR_PATH}/make.settings"
+  make -f "${unpacked_tar}/Makefile" install
+}
+
 function main() {
   local cmd remainingArgs options
   declare -A options
@@ -760,6 +826,9 @@ function main() {
       ;;
     version)
       version
+      ;;
+    selfupdate)
+      selfupdate
       ;;
     *)
       die "Unknown command given: '$cmd'\nSee 'help' for usage information"
