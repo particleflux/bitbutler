@@ -800,6 +800,7 @@ function selfupdate() {
   # This file cannot be followed but also does not add important information for the script.
   #shellcheck disable=SC1090
   source "${BB_VENDOR_PATH}/make.settings"
+  cd "${unpacked_tar}"
   make -f "${unpacked_tar}/Makefile" install
 }
 
