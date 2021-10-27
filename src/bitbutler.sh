@@ -800,7 +800,7 @@ function selfupdate() {
   # This file cannot be followed but also does not add important information for the script.
   #shellcheck disable=SC1090
   source "${SETTINGS_FILE}"
-  cd "${unpacked_tar}"
+  cd "${unpacked_tar}" || die "Could not find ${unpacked_tar}"
   make -f "${unpacked_tar}/Makefile" install
 }
 
