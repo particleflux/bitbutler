@@ -440,7 +440,7 @@ function deploykey() {
       response=$(_request GET "$endpoint")
       checkError "$response"
 
-      echo -n "$response" | jq -r '.values[] | [.id, .label] | @tsv'
+      echo -n "$response" | jq -r '.values[] | [.id, .label, .key] | @tsv'
       ;;
     add)
       [[ -n "$label" ]] || die "Required argument 'label' missing"
