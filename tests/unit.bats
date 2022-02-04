@@ -201,6 +201,20 @@ teardown() {
   [[ "${lines[0]}" =~ "Repository dummy/foo not found" ]]
 }
 
+@test "deploykey - list" {
+  shellmock_expect curl \
+    --type partial \
+    --match 'dummy-repo/deploy-keys' \
+    --status 0 \
+    --output "$(< $BATS_TEST_DIRNAME/_data/responses/deploykey-list.json)"
+
+  run deploykey list dummy-repo
+
+  [[ "$status" = "0" ]]
+  [[ "${lines[0]}" = "$(echo -e "123\tThe-Label\tssh-rsa bWFkZSB5b3UgbG9vaw==")" ]]
+  [[ "${lines[1]}" = "$(echo -e "124\tThe-Label 2\tssh-rsa Zm9vbGVkIHlvdSB0d2ljZT8=")" ]]
+}
+
 @test "webhook - unknown sub cmd" {
   run webhook foo-bar
 
