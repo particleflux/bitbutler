@@ -797,9 +797,13 @@ function selfupdate() {
     die "Cannot install automatically"
   fi
 
+  set -a
   # This file cannot be followed but also does not add important information for the script.
   #shellcheck disable=SC1090
-  source "${BB_VENDOR_PATH}/make.settings"
+  source "${SETTINGS_FILE}"
+  set +a
+
+  cd "${unpacked_tar}" || die "Could not find ${unpacked_tar}"
   make -f "${unpacked_tar}/Makefile" install
 }
 
