@@ -38,6 +38,9 @@ _bitbutler_completion()
                 deploykey|restriction|reviewer|repo|webhook)
                     COMPREPLY=( $(compgen -W "add delete list" -- ${cur}) )
                     ;;
+                pullrequest)
+                    COMPREPLY=( $(compgen -W "approve list unapprove" -- ${cur}) )
+                    ;;
             esac
         elif [[ ${COMP_CWORD} == 3 ]]; then
             cmd="${COMP_WORDS[COMP_CWORD-2]}"
@@ -45,7 +48,7 @@ _bitbutler_completion()
                 bbc_repos="$(bitbutler repo list)"
             fi
             case "$cmd" in
-                deploykey|restriction|reviewer|webhook)
+                deploykey|pullrequest|restriction|reviewer|webhook)
                     COMPREPLY=( $(compgen -W "$bbc_repos" -- ${cur}) )
                     ;;
             esac
