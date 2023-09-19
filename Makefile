@@ -8,14 +8,14 @@ INSTALL ?= install
 
 PROGRAM_NAME = bitbutler
 
-install: dirs doc persist
+install: doc persist
 	$(INSTALL) -D -t "${DESTDIR}${DATADIR}/${PROGRAM_NAME}" src/*.sh
 	$(INSTALL) -D man/bitbutler.1 $(DESTDIR)$(MANDIR)/man1/${PROGRAM_NAME}.1
 	mkdir -p "${DESTDIR}${BINDIR}"
 	printf '#!/usr/bin/env bash\nBB_VENDOR_PATH="${DESTDIR}${DATADIR}/${PROGRAM_NAME}" exec ${DESTDIR}${DATADIR}/${PROGRAM_NAME}/bitbutler.sh "$$@"' > "${DESTDIR}${BINDIR}/${PROGRAM_NAME}"
 	chmod u+rwx,g+x,o+x "${DESTDIR}${BINDIR}/${PROGRAM_NAME}"
 
-persist:
+persist: dirs
 	$(eval PERSIST_FILE := $(DESTDIR)$(DATADIR)/$(PROGRAM_NAME)/make.settings)
 	$(file > $(PERSIST_FILE),PREFIX=$(PREFIX))
 	$(file >> $(PERSIST_FILE),BINDIR=$(BINDIR))
@@ -51,4 +51,4 @@ clean:
 	$(MAKE) -C man clean
 
 
-.PHONY: install test coverage clean doc shellcheck stylecheck persist
+.PHONY: install test coverage clean doc shellcheck stylecheck persist dirs
