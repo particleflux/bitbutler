@@ -8,7 +8,7 @@ INSTALL ?= install
 
 PROGRAM_NAME = bitbutler
 
-install: doc persist
+install: dirs doc persist
 	$(INSTALL) -D -t "${DESTDIR}${DATADIR}/${PROGRAM_NAME}" src/*.sh
 	$(INSTALL) -D man/bitbutler.1 $(DESTDIR)$(MANDIR)/man1/${PROGRAM_NAME}.1
 	mkdir -p "${DESTDIR}${BINDIR}"
@@ -16,12 +16,17 @@ install: doc persist
 	chmod u+rwx,g+x,o+x "${DESTDIR}${BINDIR}/${PROGRAM_NAME}"
 
 persist:
-	$(eval PERSIST_FILE := $(DATADIR)/$(PROGRAM_NAME)/make.settings)
+	$(eval PERSIST_FILE := $(DESTDIR)$(DATADIR)/$(PROGRAM_NAME)/make.settings)
 	$(file > $(PERSIST_FILE),PREFIX=$(PREFIX))
 	$(file >> $(PERSIST_FILE),BINDIR=$(BINDIR))
 	$(file >> $(PERSIST_FILE),DATADIR=$(DATADIR))
 	$(file >> $(PERSIST_FILE),MANDIR=$(MANDIR))
 	$(file >> $(PERSIST_FILE),DESTDIR=$(DESTDIR))
+
+# before persist is called for the first time, this needs to be run
+# note: it cannot be in the persist step, as it would run the `eval` before the step is run
+dirs:
+	mkdir -pv "$(DESTDIR)$(DATADIR)/$(PROGRAM_NAME)"
 
 doc:
 	$(MAKE) -C man
