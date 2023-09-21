@@ -49,8 +49,8 @@ instead of using your actual password which has full access to your account.
 Depending on what you want to do with _bitbutler_, different scopes are
 required, see table below.
 
-| Bitbutler command | required scope | Name the bitbucket GUI |
-|:---|:---|:---|
+| Bitbutler command | required scope | Name in the bitbucket GUI      |
+|:---|:---|:-------------------------------|
 | authtest | account | Account / Read (implies Email) |
 | branches | repository | Repositories / Read |
 | deploykey add | repository | Repositories / Read |
