@@ -49,34 +49,34 @@ instead of using your actual password which has full access to your account.
 Depending on what you want to do with _bitbutler_, different scopes are
 required, see table below.
 
-| Bitbutler command | required scope | Name in the bitbucket GUI      |
-|:---|:---|:-------------------------------|
-| authtest | account | Account / Read (implies Email) |
-| branches | repository | Repositories / Read |
-| deploykey add | repository | Repositories / Read |
-| | repository:admin | Repositories / Admin |
-| deploykey delete | repository | Repositories / Read |
-| | repository:admin | Repositories / Admin |
-| deploykey list | repository | Repositories / Read |
-| | repository:admin | Repositories / Admin |
-| project add | project:write | Projects / Write |
-| project delete | project:write | Projects / Write |
-| project list | project | Projects / Read |
-| pullrequest approve | pullrequest:write | Pullrequest / Write |
-| pullrequest list | pullrequest | Pullrequest / Read |
-| pullrequest unapprove | pullrequest:write | Pullrequest / Write |
-| repo add | repository:admin | Repositories / Admin |
-| repo delete | repository:delete | Repositories / Delete |
-| repo list | repository | Repositories / Read |
-| restriction add | repository:admin | Repositories / Admin |
-| restriction delete | repository:admin | Repositories / Admin |
-| restriction list | repository:admin | Repositories / Admin |
-| reviewer add | repository:admin | Repositories / Admin |
-| reviewer delete | repository:admin | Repositories / Admin |
-| reviewer list | pullrequest | Pull requests / Read
-| webhook add | webhook | Webhooks / Read and write |
-| webhook delete | webhook | Webhooks / Read and write |
-| webhook list | webhook | Webhooks / Read and write |
+| Bitbutler command     | required scope    | Name in the bitbucket GUI      |
+|:----------------------|:------------------|:-------------------------------|
+| authtest              | account           | Account / Read (implies Email) |
+| branches              | repository        | Repositories / Read            |
+| deploykey add         | repository        | Repositories / Read            |
+|                       | repository:admin  | Repositories / Admin           |
+| deploykey delete      | repository        | Repositories / Read            |
+|                       | repository:admin  | Repositories / Admin           |
+| deploykey list        | repository        | Repositories / Read            |
+|                       | repository:admin  | Repositories / Admin           |
+| project add           | project:write     | Projects / Write               |
+| project delete        | project:write     | Projects / Write               |
+| project list          | project           | Projects / Read                |
+| pullrequest approve   | pullrequest:write | Pullrequest / Write            |
+| pullrequest list      | pullrequest       | Pullrequest / Read             |
+| pullrequest unapprove | pullrequest:write | Pullrequest / Write            |
+| repo add              | repository:admin  | Repositories / Admin           |
+| repo delete           | repository:delete | Repositories / Delete          |
+| repo list             | repository        | Repositories / Read            |
+| restriction add       | repository:admin  | Repositories / Admin           |
+| restriction delete    | repository:admin  | Repositories / Admin           |
+| restriction list      | repository:admin  | Repositories / Admin           |
+| reviewer add          | repository:admin  | Repositories / Admin           |
+| reviewer delete       | repository:admin  | Repositories / Admin           |
+| reviewer list         | pullrequest       | Pull requests / Read           |
+| webhook add           | webhook           | Webhooks / Read and write      |
+| webhook delete        | webhook           | Webhooks / Read and write      |
+| webhook list          | webhook           | Webhooks / Read and write      |
 
 ## Development
 
