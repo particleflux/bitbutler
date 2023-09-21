@@ -53,6 +53,8 @@ required, see table below.
 |:----------------------|:------------------|:-------------------------------|
 | authtest              | account           | Account / Read (implies Email) |
 | branches              | repository        | Repositories / Read            |
+| commit approve        | repository:write  | Repositories / Write           |
+| commit unapprove      | repository:write  | Repositories / Write           |
 | deploykey add         | repository        | Repositories / Read            |
 |                       | repository:admin  | Repositories / Admin           |
 | deploykey delete      | repository        | Repositories / Read            |
