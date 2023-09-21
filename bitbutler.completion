@@ -41,6 +41,9 @@ _bitbutler_completion()
                 pullrequest)
                     COMPREPLY=( $(compgen -W "approve list unapprove" -- ${cur}) )
                     ;;
+                commit)
+                    COMPREPLY=( $(compgen -W "approve unapprove" -- ${cur}) )
+                    ;;
             esac
         elif [[ ${COMP_CWORD} == 3 ]]; then
             cmd="${COMP_WORDS[COMP_CWORD-2]}"
@@ -48,7 +51,7 @@ _bitbutler_completion()
                 bbc_repos="$(bitbutler repo list)"
             fi
             case "$cmd" in
-                deploykey|pullrequest|restriction|reviewer|webhook)
+                commit|deploykey|pullrequest|restriction|reviewer|webhook)
                     COMPREPLY=( $(compgen -W "$bbc_repos" -- ${cur}) )
                     ;;
             esac

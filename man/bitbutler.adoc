@@ -29,6 +29,24 @@ Test the supplied credentials.
 === branches _REPO_
 List branches of repository _REPO_.
 
+=== commit _SUBCOMMAND_
+Work with commits
+
+The _COMMIT_ID_ is either the full SHA hash of the commit, or an abbreviated
+variant. Both examples below reference the same commit.
+
+==== subcommands
+
+*approve* _REPO_ _COMMIT_ID_::
+Approve commit with given id.
+
+    bitbutler commit approve my-repo 2f5ec8b
+
+*unapprove* _REPO_ _PULL_REQUEST_ID_::
+Unapprove commit with given id.
+
+    bitbutler commit unapprove my-repo 2f5ec8bc7e5fda314494691e2ee068aed8d4ff66
+
 === config
 Initialize a skeleton config file.
 

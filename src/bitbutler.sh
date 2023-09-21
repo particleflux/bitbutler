@@ -82,6 +82,12 @@ ${b}Commands$w
     ${b}branches ${c}REPO$w
         List branches of repository ${c}REPO$w
 
+    ${b}commit$w ${c}SUBCOMMAND$w ${c}REPO$w ${c}COMMIT-ID$w
+        Work with commits
+
+        ${y}approve$w   Approve the given commit
+        ${y}unapprove$w Unapprove the given commit
+
     ${b}config$w
         Initialize an empty config file to fill
 
@@ -393,6 +399,36 @@ function branches() {
   response=$(_request GET "/repositories/${bitbucket_owner}/$repo/refs?pagelen=100&fields=values.type,values.name")
   checkError "$response"
   echo -n "$response" | jq -r '.values[] | select(.type = "branch") | .name'
+}
+
+function commit() {
+  local repo subCmd commitId response
+
+  subCmd="$1"
+  repo="$2"
+  commitId="$3"
+
+  [[ -n "$subCmd" ]] || die "Required argument 'sub command' missing"
+  [[ -n "$repo" ]] || die "Required argument 'repo' missing"
+  [[ -n "$commitId" ]] || die "Required argument 'commitId' missing"
+
+  local -r endpoint="/repositories/${bitbucket_owner}/${repo}/commit"
+
+  case "$subCmd" in
+    approve)
+      response=$(_request POST "${endpoint}/${commitId}/approve" "{}")
+      checkError "$response"
+      echo 'Commit approved'
+      ;;
+    unapprove)
+      response=$(_request DELETE "${endpoint}/${commitId}/approve")
+      checkError "$response"
+      echo 'Commit unapproved'
+      ;;
+    *)
+      die "Unknown subcommand given: '$subCmd'"
+      ;;
+  esac
 }
 
 function config() {
@@ -821,7 +857,7 @@ function main() {
     authtest | config | open | branches)
       $cmd "$remainingArgs"
       ;;
-    restriction | reviewer | deploykey | repo | webhook | team | project | pullrequest)
+    restriction | reviewer | deploykey | repo | webhook | team | project | pullrequest | commit)
       # shellcheck disable=SC2086
       $cmd ${remainingArgs[*]}
       ;;

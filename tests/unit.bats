@@ -393,3 +393,86 @@ teardown() {
 
   [[ "$status" = "0" ]]
 }
+
+@test "commit - missing commit id" {
+  run commit baz repo
+
+  [[ "$status" = "1" ]]
+  [[ "$output" =~ "Required argument 'commitId' missing" ]]
+}
+
+@test "commit - missing repo" {
+  run commit baz
+
+  [[ "$status" = "1" ]]
+  [[ "$output" =~ "Required argument 'repo' missing" ]]
+}
+
+@test "commit - missing sub command" {
+  run commit
+
+  [[ "$status" = "1" ]]
+  [[ "$output" =~ "Required argument 'sub command' missing" ]]
+}
+
+@test "commit - unknown sub cmd" {
+  run commit baz repo id
+
+  [[ "$status" = "1" ]]
+  [[ "$output" =~ "Unknown subcommand" ]]
+}
+
+@test "commit approve - success" {
+  shellmock_expect curl \
+    --type partial \
+    --match 'repositories/dummy/test/commit/123456/approve' \
+    --status 0 \
+    --output ""
+
+  run commit approve test 123456
+
+  [[ "$status" = "0" ]]
+  shellmock_verify
+  [[ "${capture[0]}" == *"repositories/dummy/test/commit/123456/approve"* ]]
+}
+
+@test "commit approve - commit not found" {
+  shellmock_expect curl \
+    --type partial \
+    --match 'repositories/dummy/test/commit/9782346876/approve' \
+    --status 0 \
+    --output "$(< $BATS_TEST_DIRNAME/_data/responses/commit-not-found.json)"
+
+  run commit approve test 9782346876
+
+  [[ "$status" = "1" ]]
+  [[ "$output" =~ "Commit not found" ]]
+}
+
+@test "commit unapprove" {
+  shellmock_expect curl \
+    --type partial \
+    --match 'repositories/dummy/repo/commit/54280dec/approve' \
+    --status 0 \
+    --output ""
+
+  run commit unapprove repo 54280dec
+
+  [[ "$status" = "0" ]]
+  shellmock_verify
+  [[ "${capture[0]}" == *"repositories/dummy/repo/commit/54280dec/approve"* ]]
+  [[ "${capture[0]}" == *"-X DELETE"* ]]
+}
+
+@test "commit unapprove - commit not found" {
+  shellmock_expect curl \
+    --type partial \
+    --match 'repositories/dummy/test/commit/9782346876/approve' \
+    --status 0 \
+    --output "$(< $BATS_TEST_DIRNAME/_data/responses/commit-not-found.json)"
+
+  run commit unapprove test 9782346876
+
+  [[ "$status" = "1" ]]
+  [[ "$output" =~ "Commit not found" ]]
+}

@@ -1,0 +1,16 @@
+{
+  "type": "error",
+  "error": {
+    "message": "Commit not found",
+    "data": {
+      "shas": [
+        "dsfsdf"
+      ]
+    }
+  },
+  "data": {
+    "shas": [
+      "dsfsdf"
+    ]
+  }
+}
