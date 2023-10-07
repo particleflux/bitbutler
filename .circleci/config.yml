@@ -7,7 +7,7 @@ workflows:
   commit:
     jobs:
       - shellcheck/check:
-          path: src/
+          dir: src/
       - test
       - fmt
   nightly:
@@ -20,7 +20,7 @@ workflows:
                 - master
     jobs:
       - shellcheck/check:
-          path: src/
+          dir: src/
       - test
       - fmt
 
