@@ -858,7 +858,7 @@ function main() {
       $cmd "$remainingArgs"
       ;;
     restriction | reviewer | deploykey | repo | webhook | team | project | pullrequest | commit)
-      # shellcheck disable=SC2086
+      # shellcheck disable=SC2086,SC2048
       $cmd ${remainingArgs[*]}
       ;;
     help | "")
