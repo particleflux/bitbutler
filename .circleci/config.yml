@@ -82,7 +82,7 @@ jobs:
 
   fmt:
     docker:
-      - image: cimg/base:2020.06
+      - image: cimg/base:2023.09
     environment:
       SHFMT_VERSION: 3.1.1
 
