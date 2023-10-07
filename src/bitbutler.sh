@@ -300,7 +300,7 @@ function fetchAllPages() {
   combined="$(jq '.values' <<<"$current")"
 
   while next="$(jq -re '.next' <<<"$current")"; do
-    nextUrl="${next#$BASE_URL}"
+    nextUrl="${next#"$BASE_URL"}"
     dbg "nextUrl '$nextUrl'"
     current="$(_request GET "$nextUrl")"
     dbg "Response: $current"
