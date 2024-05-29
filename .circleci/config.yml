@@ -84,7 +84,7 @@ jobs:
 
   fmt:
     docker:
-      - image: cimg/base:2024.02
+      - image: cimg/base:2024.05
     environment:
       SHFMT_VERSION: 3.1.1
 
