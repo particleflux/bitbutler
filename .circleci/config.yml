@@ -84,7 +84,7 @@ jobs:
 
   fmt:
     docker:
-      - image: cimg/base:2025.06@sha256:9e0a8c6aecdc9190dd0ea5aaa51b630dbec0972bdd8a583240342af466823d27
+      - image: cimg/base:2025.07@sha256:aff996311c7d3ecdf0925f5856d79d5bd2d4773bd2931ef4d65f584e5f0e800c
     environment:
       SHFMT_VERSION: 3.1.1
 
