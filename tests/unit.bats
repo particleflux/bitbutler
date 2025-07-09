@@ -295,6 +295,29 @@ teardown() {
   [[ "${lines[0]}" = "$(echo -e "420\tPullrequest title\tJohn Doe | SpaceShips")" ]]
 }
 
+@test "pullrequest - create" {
+  run pullrequest create "dummy-repo"
+
+  [[ "$status" = "1" ]]
+  [[ "${lines[0]}" = "$(echo -e "\e[31mRequired argument 'source branch' is missing\e[0m")" ]]
+
+  run pullrequest create "dummy-repo" "source-branch"
+  [[ "$status" = "1" ]]
+  [[ "${lines[0]}" = "$(echo -e "\e[31mRequired argument 'target branch' is missing\e[0m")" ]]
+
+  shellmock_expect curl \
+    --type partial \
+    --match 'repositories/dummy/dummy-repo/pullrequests' \
+    --status 0 \
+    --output "$(< $BATS_TEST_DIRNAME/_data/responses/pullrequest-created.json)"
+
+  run pullrequest create "dummy-repo" "source-branch" "target-branch"
+  [[ "$status" = "0" ]]
+  [[ "${lines[0]}" = "Pull request created" ]]
+  [[ "${lines[1]}" = "https://bitbucket.org/dummy/dummy-repo/pull-requests/42" ]]
+
+}
+
 @test "project - list" {
   shellmock_expect curl \
     --type partial \
