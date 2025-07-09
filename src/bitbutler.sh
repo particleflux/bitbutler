@@ -117,6 +117,8 @@ ${b}Commands$w
         ${y}approve$w     Approve pull request with given id
         ${y}list$w        List pull requests
         ${y}unapprove$w   Unapprove pull request with given id
+        ${y}create ${c}<source branch> <target branch>$w
+                    Create pull request
 
     ${b}repo$w ${c}SUBCOMMAND$w
         Work with repositories
@@ -600,6 +602,16 @@ function pullrequest() {
       response=$(_request DELETE "${endpoint}/${pullrequestId}/approve" "{}")
       checkError "$response"
       echo 'Pull request unapproved'
+      ;;
+    create)
+      sourceBranch="$3"
+      targetBranch="$4"
+      [[ -n "$sourceBranch" ]] || die "Required argument 'source branch' is missing"
+      [[ -n "$targetBranch" ]] || die "Required argument 'target branch' is missing"
+      response=$(_request POST "${endpoint}" "{\"title\":\"$sourceBranch\",\"source\":{\"branch\":{\"name\":\"${sourceBranch}\"}},\"destination\":{\"branch\":{\"name\":\"${targetBranch}\"}}}")
+      checkError "$response"
+      echo 'Pull request created'
+      jq --raw-output '.links.html.href' <<<"$response"
       ;;
   esac
 }

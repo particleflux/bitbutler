@@ -1,0 +1,23 @@
+{
+  "x-comment": "This file does only contain the fields required for testing.",
+  "type": "pullrequest",
+  "id": 42,
+  "title": "source-branch",
+  "destination": {
+    "branch": {
+      "name": "target-branch"
+    }
+  },
+  "source": {
+    "branch": {
+      "name": "source-branch"
+    }
+  },
+  "reviewers": [],
+  "participants": [],
+  "links": {
+    "html": {
+      "href": "https://bitbucket.org/dummy/dummy-repo/pull-requests/42"
+    }
+  }
+}
