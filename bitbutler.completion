@@ -39,7 +39,7 @@ _bitbutler_completion()
                     COMPREPLY=( $(compgen -W "add delete list" -- ${cur}) )
                     ;;
                 pullrequest)
-                    COMPREPLY=( $(compgen -W "approve list unapprove" -- ${cur}) )
+                    COMPREPLY=( $(compgen -W "approve create list unapprove" -- ${cur}) )
                     ;;
                 commit)
                     COMPREPLY=( $(compgen -W "approve unapprove" -- ${cur}) )
