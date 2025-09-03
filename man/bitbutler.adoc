@@ -89,6 +89,9 @@ Work with pull requests
 Approve pull request with given id. You can retrieve the _PULL_REQUEST_ID_ from the first column of the output
 of `pullrequest list`.
 
+*create* _REPO_ _SOURCE_BRANCH_ _TARGET_BRANCH::
+Create a pull request from _SOURCE_BRANCH_ to _TARGET_BRANCH_ in the _REPO_.
+
 *list* _REPO_::
 Lists all pull requests in that repository.
 

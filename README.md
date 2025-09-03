@@ -65,6 +65,7 @@ required, see table below.
 | project delete        | project:write     | Projects / Write               |
 | project list          | project           | Projects / Read                |
 | pullrequest approve   | pullrequest:write | Pullrequest / Write            |
+| pullrequest create    | pullrequest:write | Pullrequest / Write            |
 | pullrequest list      | pullrequest       | Pullrequest / Read             |
 | pullrequest unapprove | pullrequest:write | Pullrequest / Write            |
 | repo add              | repository:admin  | Repositories / Admin           |
