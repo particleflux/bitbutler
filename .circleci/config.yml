@@ -51,7 +51,7 @@ jobs:
             export PATH="$HOME/bin:$PATH"
 
             # a normal test run before the coverage one; it has better output
-            bats -F junit -o tests/ tests/
+            bats -F junit tests/ | tee tests/junit.xml
 
             kcov --include-path=. --exclude-path=tests coverage bats tests/ &> /dev/null
             
