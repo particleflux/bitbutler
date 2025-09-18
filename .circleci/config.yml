@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   shellcheck: circleci/shellcheck@3.4.0
-  codecov: codecov/codecov@5
+  codecov: codecov/codecov@5.4.3
 
 workflows:
   commit:
