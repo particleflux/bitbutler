@@ -1,7 +1,7 @@
 # bitbutler
 
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/particleflux/bitbutler/tree/master.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/gh/particleflux/bitbutler/tree/master)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/ab50914097740e4e3fad/test_coverage)](https://codeclimate.com/github/particleflux/bitbutler/test_coverage)
+[![codecov](https://codecov.io/gh/particleflux/bitbutler/graph/badge.svg?token=7E6I1X1YPB)](https://codecov.io/gh/particleflux/bitbutler)
 [![made-with-bash](https://img.shields.io/badge/Made%20with-Bash-1f425f.svg)](https://www.gnu.org/software/bash/)
 
 A bitbucket administration utility.
