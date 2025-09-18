@@ -54,12 +54,6 @@ jobs:
             bats -F junit tests/ | tee tests/junit.xml
 
             kcov --include-path=. --exclude-path=tests coverage bats tests/ &> /dev/null
-            
-            #xml="$(ls -1 coverage/bats*/cobertura.xml | head -1)"
-
-            # removing trailing slash in cobertura <source>
-            # this works around an issue with the codeclimate formatter
-            #sed -ri "s#<source>(.+)/</source>#<source>\1</source>#" "$xml"
 
       - codecov/upload:
           report_type: test_results
