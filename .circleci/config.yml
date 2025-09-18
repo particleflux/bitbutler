@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   shellcheck: circleci/shellcheck@3.4.0
+  codecov: codecov/codecov@5
 
 workflows:
   commit:
@@ -34,29 +35,15 @@ jobs:
     steps:
       - checkout
 
-      # install codeclimate test reporter
-      - restore_cache:
-          keys:
-            - v3-dependencies
-
       - run:
           name: Install test dependencies
           command: |
-            if [[ ! -f "/tmp/cc-test-reporter" ]]; then
-              curl -sSL -o /tmp/cc-test-reporter \
-                https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
-            fi
-            chmod +x /tmp/cc-test-reporter
-
+            sudo apt update && sudo apt install -y gnupg
+            
             shellmock_version=1.0
             curl -sSL "https://github.com/capitalone/bash_shell_mock/archive/$shellmock_version.tar.gz" | tar xvz -C /tmp
             cd "/tmp/bash_shell_mock-$shellmock_version/"
             ./install.sh $HOME
-
-      - save_cache:
-          paths:
-            - /tmp/cc-test-reporter
-          key: v3-dependencies
 
       - run:
           name: Run tests
@@ -66,16 +53,20 @@ jobs:
             # a normal test run before the coverage one; it has better output
             bats -F junit -o tests/ tests/
 
-            /tmp/cc-test-reporter before-build
             kcov --include-path=. --exclude-path=tests coverage bats tests/ &> /dev/null
-            xml="$(ls -1 coverage/bats*/cobertura.xml | head -1)"
+            
+            #xml="$(ls -1 coverage/bats*/cobertura.xml | head -1)"
 
             # removing trailing slash in cobertura <source>
             # this works around an issue with the codeclimate formatter
-            sed -ri "s#<source>(.+)/</source>#<source>\1</source>#" "$xml"
+            #sed -ri "s#<source>(.+)/</source>#<source>\1</source>#" "$xml"
 
-            /tmp/cc-test-reporter format-coverage $xml --input-type cobertura
-            /tmp/cc-test-reporter upload-coverage || /bin/true
+      - codecov/upload:
+          report_type: test_results
+      - codecov/upload:
+          report_type: coverage
+          disable_search: true
+          files: "coverage/bats*/cobertura.xml"
 
       - store_artifacts:
           path: coverage
