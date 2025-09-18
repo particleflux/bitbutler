@@ -215,6 +215,18 @@ teardown() {
   [[ "${lines[1]}" = "$(echo -e "124\tThe-Label 2\tssh-rsa Zm9vbGVkIHlvdSB0d2ljZT8=")" ]]
 }
 
+@test "deploykey - delete" {
+  shellmock_expect curl \
+    --type partial \
+    --match 'dummy-repo/deploy-keys' \
+    --status 0 \
+    --output ""
+
+  run deploykey delete dummy-repo 8c08f70d-cf6e-44b0-8668-734209ab7a65
+
+  [[ "$status" = "0" ]]
+}
+
 @test "webhook - unknown sub cmd" {
   run webhook foo-bar
 
