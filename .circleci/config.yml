@@ -30,7 +30,7 @@ workflows:
 jobs:
   test:
     docker:
-      - image: particleflux/circleci-bats-kcov:7.0.0@sha256:a1534f6ca2964ad85d1344a274493afcb01557de2409e7d4947ba5508556c80a
+      - image: particleflux/circleci-bats-kcov:7.0.0@sha256:d4e5ef65fd493cb2c96dfd007ab38a6f9b7a6911d492d92a63b1f09a8d4ec438
 
     steps:
       - checkout
